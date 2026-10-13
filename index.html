@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>阿姆斯特丹房價線圖</title>
+<style>
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;--home:#0b0b0b}
+@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 16px 56px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+p.sub{margin:0 0 20px;color:var(--ink2);font-size:14px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:0 0 14px;font-size:14px;color:var(--ink2)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink2);font:inherit;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 8px;font-size:13px;color:var(--ink2)}
+.legend button{appearance:none;border:0;background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:2px 0}
+.legend button.off{opacity:.35;text-decoration:line-through}
+.sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chart{position:relative;height:420px}
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted)}
+tr.home td{font-weight:600}
+.up{color:#0a7d3c}.down{color:#c0392b}
+@media (prefers-color-scheme: dark){.up{color:#4cc38a}.down{color:#f08a7c}}
+.note{margin-top:20px;color:var(--muted);font-size:13px}
+.note a{color:inherit}
+@media (max-width:560px){.chart{height:340px}}
+</style>
+</head>
+<body>
+<main>
+<h1>阿姆斯特丹房價線圖</h1>
+<p class="sub">每一季一個點。滑鼠移上去，看每一區從基準季到那一季漲了多少。</p>
+
+<div class="controls">
+  <div class="seg" role="group" aria-label="資料">
+    <button id="v-m2" aria-pressed="true">各區公寓每 m²</button>
+    <button id="v-cbs" aria-pressed="false">各地房價指數</button>
+  </div>
+  <div class="seg" role="group" aria-label="顯示">
+    <button id="m-pct" aria-pressed="true">漲幅 %</button>
+    <button id="m-raw" aria-pressed="false">原始數字</button>
+  </div>
+  <span>基準季 <select id="base" aria-label="基準季"></select></span>
+  <label><input type="checkbox" id="smooth"> 平滑（四季平均）</label>
+</div>
+
+<div class="legend" id="legend"></div>
+<div class="chart"><canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖"></canvas></div>
+
+<table aria-label="各區漲幅">
+  <thead><tr><th>地區</th><th id="th-base">基準季</th><th id="th-last">最新</th><th>漲幅</th></tr></thead>
+  <tbody id="tb"></tbody>
+</table>
+
+<p class="note" id="note"></p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DATA = {"quarters":["2016Q1","2016Q2","2016Q3","2016Q4","2017Q1","2017Q2","2017Q3","2017Q4","2018Q1","2018Q2","2018Q3","2018Q4","2019Q1","2019Q2","2019Q3","2019Q4","2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"],"generated":"2026-10-13","views":{"m2":{"unit":"eur","series":[{"id":"home","label":"我家","color":"#0b0b0b","home":true,"values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7894,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277]},{"id":"nvm_zuid_m2","label":"南區 Zuid","color":"#2a78d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7518.0,8194.0,8332.0,8565.0,8733.0,9275.0,8686.0,8314.0,8025.0,8230.0,8607.0,8726.0,8775.0,9471.0,9377.0,9391.0,8971.0,9425.0,9406.0,9529.0,9321.0,9657.0]},{"id":"nvm_centrum_m2","label":"市中心 Centrum","color":"#6250d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7732.0,8028.0,8442.0,8784.0,8635.0,9084.0,8949.0,8654.0,8314.0,8678.0,8772.0,9190.0,9086.0,9512.0,9626.0,9659.0,9290.0,9949.0,9568.0,9667.0,9429.0,9728.0]},{"id":"nvm_west_m2","label":"西區 West","color":"#e87ba4","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7458.0,8146.0,8295.0,8489.0,8699.0,8977.0,8284.0,8165.0,7871.0,8115.0,8362.0,8680.0,8801.0,9314.0,9314.0,9430.0,9209.0,9514.0,9300.0,9352.0,9258.0,9661.0]},{"id":"nvm_oost_m2","label":"東區 Oost","color":"#1baf7a","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6776.0,7328.0,7613.0,7662.0,7953.0,8254.0,7870.0,7484.0,7067.0,7438.0,7832.0,7960.0,8150.0,8603.0,8357.0,8720.0,8617.0,8882.0,8915.0,8732.0,8623.0,8994.0]},{"id":"nvm_noord_m2","label":"北區 Noord","color":"#eb6834","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,5163.0,5209.0,5295.0,5590.0,5718.0,6174.0,5810.0,5268.0,5289.0,5309.0,5262.0,5992.0,6396.0,6235.0,6276.0,6270.0,6170.0,6806.0,6685.0,6858.0,6621.0,6656.0]},{"id":"nvm_nieuw_west_m2","label":"新西區 Nieuw-West","color":"#eda100","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4809.0,4849.0,5051.0,5309.0,5373.0,5756.0,5506.0,5294.0,5157.0,5132.0,5470.0,5754.0,5812.0,5896.0,5876.0,6230.0,6074.0,6415.0,6553.0,6096.0,5823.0,6031.0]},{"id":"nvm_zuidoost_m2","label":"東南區 Zuidoost","color":"#008300","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3635.0,3801.0,4162.0,4084.0,4650.0,4517.0,4837.0,4120.0,4234.0,4168.0,4215.0,4390.0,4520.0,4411.0,4711.0,5019.0,4717.0,4740.0,4805.0,4941.0,4808.0,4662.0]},{"id":"nvm_city_m2","label":"全市","color":"#898781","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6855.0,7388.0,7568.0,7767.0,7667.0,8310.0,7831.0,7544.0,7201.0,7462.0,7794.0,7994.0,8166.0,8545.0,8486.0,8678.0,8329.0,8779.0,8665.0,8710.0,8581.0,8799.0]}]},"cbs":{"unit":"index","series":[{"id":"cbs_amsterdam","label":"阿姆斯特丹","color":"#2a78d6","values":[66.4,69.4,71.8,73.4,76.7,78.7,81.8,83.2,85.9,89.3,92.5,93.6,93.8,95.4,96,96.7,98.1,100.5,101.3,100.1,104,108,116.4,117.7,123.4,126.5,126.3,119,116.5,115,119.1,120,122.6,126.9,131.1,130.8,130.4,132.4,134.1,132.9,132.9,133.5]},{"id":"cbs_groot_amsterdam","label":"大阿姆斯特丹","color":"#6250d6","values":[67.3,69.4,72.1,73.3,76.2,78.1,81.3,82.4,85.5,88.2,91.4,92.6,93.4,94.9,95.7,96.3,97.9,100.1,101.2,100.9,104.6,109,117,119,123.9,127.8,127.5,121.4,118.7,117,120.1,121.1,124.5,128.9,133,133.2,133.3,135.2,137.1,136.3,136.5,137.2]},{"id":"cbs_haarlem_agglo","label":"哈倫一帶","color":"#e87ba4","values":[67.4,68,71.3,73.4,74.5,77.7,79.1,80.5,84.8,86.5,90.7,91.9,91.5,92.9,95.2,96,97.3,97.8,101.3,103.6,107.4,111.9,121.3,124.3,130.4,133.8,131.9,126.7,123.3,119.9,121.6,123.8,126.4,130.1,134.1,135.5,137.8,140.7,141.4,141.8,142.7,143.7]},{"id":"cbs_zaanstreek","label":"Zaanstad 一帶","color":"#1baf7a","values":[65.1,65.6,68.5,70.4,72.7,74.7,77.8,78.9,82.7,83.4,86.5,88.3,90.5,91.4,93.2,95.3,96.7,97.6,102.7,103.1,107.4,112.7,119.5,123.7,130.9,129.9,134,128.1,123.8,120.4,121.5,127.3,130.1,135,139.8,141.9,143.6,143.6,147,146.5,147.7,146.5]},{"id":"cbs_flevoland","label":"Almere 一帶","color":"#eda100","values":[67.3,67.8,69.6,70.9,72,73.6,75.7,78.2,79.8,82.3,84.6,87.1,88.6,90,92.5,93.1,95.5,98.8,101,104.7,108.4,115.1,122.9,129.1,135.4,139.7,139.3,134.7,132.7,130.6,132.9,136.1,139.5,144.2,148.9,151.6,154.6,156.5,158.5,160.2,160.4,161.5]},{"id":"cbs_utrecht","label":"烏特勒支","color":"#008300","values":[64.5,65.9,68.3,70.2,72.5,74.1,76.1,78.3,80.2,82.9,85,86.7,89.2,91,92.2,93.3,96.5,99.1,101.5,102.9,106.2,113,120.7,124.1,128.8,132.9,130.8,122.6,119.3,116.6,120.1,123.3,129.7,136.7,142.3,143.6,148.1,150.9,153.4,151.9,152.9,154.2]},{"id":"cbs_rotterdam","label":"鹿特丹","color":"#e34948","values":[63.3,64.6,66.9,68.8,70.5,73.3,75.9,78,81,83.8,87.9,88.1,90.8,91.4,92.8,93.8,96.6,98.5,101.1,103.8,105.8,111.2,116.7,122.2,125.9,129.4,129.4,127.2,125.6,123.2,123.3,125.7,128,130.3,134.3,137.4,139.3,141.7,143.4,144,145.8,146.2]},{"id":"cbs_nl","label":"全荷蘭","color":"#898781","values":[71.5,72.4,74.3,75.2,76.7,78.3,80.4,81.7,83.8,85.5,87.9,89.2,90.7,91.8,93.5,94.8,96.9,98.9,101.1,103.1,106.8,111.6,118.7,123.2,128.2,131.8,132.4,129,126.8,124.7,126.4,128.6,131.6,135.4,140.4,143.3,146,148.7,151.4,152.2,153.6,154.9]}]}}};
+const Q = DATA.quarters;
+const state = {view:'m2', mode:'pct', base:'2022Q2', smooth:false, hidden:{}};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const qLabel = q => q.slice(0,4)+' 年第 '+q.slice(5)+' 季';
+const fmtRaw = (v,unit) => unit==='eur' ? '€'+Math.round(v).toLocaleString('en-US') : v.toFixed(1);
+const fmtPct = v => (v>0?'+':'')+v.toFixed(1)+'%';
+
+function smooth(vals){
+  return vals.map((v,i)=>{
+    if(v==null) return null;
+    const w=[]; for(let k=i-3;k<=i;k++){ if(k>=0 && vals[k]!=null) w.push(vals[k]); }
+    return w.length<4 ? null : w.reduce((a,b)=>a+b,0)/4;
+  });
+}
+function prepared(){
+  const view = DATA.views[state.view];
+  const firstIdx = Math.min(...view.series.filter(s=>!s.home).map(s=>s.values.findIndex(v=>v!=null)));
+  const bi = Q.indexOf(state.base);
+  return {view, firstIdx, bi, series: view.series.map(s=>{
+    const vals = (state.smooth && !s.home) ? smooth(s.values) : s.values;
+    const b = vals[bi];
+    const pct = vals.map(v => (v==null || b==null) ? null : (v/b-1)*100);
+    return {...s, vals, pct, b};
+  })};
+}
+function availableBases(){
+  const view = DATA.views[state.view];
+  const ref = view.series.find(s=>!s.home).values;
+  return Q.filter((q,i)=>ref[i]!=null && (!state.smooth || i - ref.findIndex(v=>v!=null) >= 3));
+}
+
+let chart;
+function render(){
+  const bases = availableBases();
+  if(!bases.includes(state.base)) state.base = bases.includes('2022Q2') ? '2022Q2' : bases[0];
+  const sel = document.getElementById('base');
+  sel.innerHTML = bases.map(q=>`<option value="${q}"${q===state.base?' selected':''}>${qLabel(q)}${q==='2022Q2'?'（我買房那季）':''}</option>`).join('');
+
+  const P = prepared();
+  const labels = Q.slice(P.firstIdx);
+  const ink = css('--ink'), muted = css('--muted'), line = css('--line');
+  const datasets = P.series.map(s=>{
+    const arr = (state.mode==='pct' ? s.pct : s.vals).slice(P.firstIdx);
+    const color = s.home ? css('--home') : s.color;
+    return {label:s.label, data:arr, _raw:s.vals.slice(P.firstIdx), _pct:s.pct.slice(P.firstIdx),
+      borderColor:color, backgroundColor:color, borderWidth:s.home?3:2, borderDash:s.home?[6,4]:[],
+      pointRadius:s.home?5:2.5, pointHoverRadius:s.home?7:5, pointStyle:s.home?'rectRot':'circle',
+      spanGaps:!!s.home, tension:0, hidden:!!state.hidden[s.id], _id:s.id, _home:!!s.home};
+  });
+  const unit = P.view.unit;
+  const cfg = {type:'line', data:{labels, datasets}, options:{
+    responsive:true, maintainAspectRatio:false, animation:false,
+    interaction:{mode:'index', intersect:false},
+    plugins:{legend:{display:false}, tooltip:{
+      itemSort:(a,b)=>(b.parsed.y??-1e9)-(a.parsed.y??-1e9),
+      filter:i=>i.parsed.y!=null,
+      callbacks:{
+        title:items=>qLabel(items[0].label)+'（對比 '+qLabel(state.base)+'）',
+        label:c=>{
+          const raw=c.dataset._raw[c.dataIndex], pct=c.dataset._pct[c.dataIndex];
+          let t=c.dataset.label+'：'+fmtRaw(raw,unit);
+          if(pct!=null) t+='，'+fmtPct(pct);
+          return t;
+        }}}},
+    scales:{
+      x:{ticks:{color:muted, autoSkip:false, maxRotation:0,
+          callback:function(v){const q=this.getLabelForValue(v); return q.endsWith('Q1')?q.slice(0,4):'';}},
+         grid:{display:false}},
+      y:{ticks:{color:muted, callback:v=> state.mode==='pct' ? (v>0?'+':'')+v+'%' : (unit==='eur'?'€'+v.toLocaleString('en-US'):v)},
+         grid:{color:ctx=> (state.mode==='pct' && ctx.tick.value===0) ? muted : line}}
+    }}};
+  if(chart) chart.destroy();
+  chart = new Chart(document.getElementById('c'), cfg);
+
+  document.getElementById('legend').innerHTML = P.series.map(s=>
+    `<button data-id="${s.id}" class="${state.hidden[s.id]?'off':''}" aria-pressed="${!state.hidden[s.id]}"><span class="sw" style="background:${s.home?css('--home'):s.color}"></span>${s.label}</button>`).join('');
+
+  const last = Q.length-1;
+  document.getElementById('th-base').textContent = state.base.replace('Q',' Q');
+  document.getElementById('th-last').textContent = Q[last].replace('Q',' Q');
+  const rows = P.series.filter(s=>s.b!=null && s.vals[last]!=null)
+    .map(s=>({s, chg:(s.vals[last]/s.b-1)*100})).sort((a,b)=>b.chg-a.chg);
+  document.getElementById('tb').innerHTML = rows.map(({s,chg})=>
+    `<tr class="${s.home?'home':''}"><td>${s.label}</td><td>${fmtRaw(s.b,unit)}</td><td>${fmtRaw(s.vals[last],unit)}</td><td class="${chg>=0?'up':'down'}">${fmtPct(chg)}</td></tr>`).join('');
+
+  document.getElementById('note').innerHTML = state.view==='m2'
+    ? '資料：NVM 與 MVA 季報，公寓成交中位價每平方公尺，只算中古屋。小區每季成交件數少，單季會跳，看趨勢比較準。「我家」只有兩個點：買入價與 2026 年銀行估價，換算成每平方公尺。更新到 '+qLabel(Q[last])+'。'
+    : '資料：荷蘭統計局 CBS 既有住宅價格指數（2020 年 = 100），所有房型。區域是 CBS 的統計區，不是單一城市。更新到 '+qLabel(Q[last])+'。';
+}
+
+document.getElementById('legend').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  state.hidden[b.dataset.id]=!state.hidden[b.dataset.id]; render();
+});
+function seg(a,b,key,va,vb){
+  const A=document.getElementById(a), B=document.getElementById(b);
+  const set=v=>{state[key]=v; A.setAttribute('aria-pressed',v===va); B.setAttribute('aria-pressed',v===vb); render();};
+  A.onclick=()=>set(va); B.onclick=()=>set(vb);
+}
+seg('v-m2','v-cbs','view','m2','cbs');
+seg('m-pct','m-raw','mode','pct','raw');
+document.getElementById('base').onchange=e=>{state.base=e.target.value; render();};
+document.getElementById('smooth').onchange=e=>{state.smooth=e.target.checked; render();};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>

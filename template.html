@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>阿姆斯特丹房價線圖</title>
+<style>
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;--home:#0b0b0b}
+@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 16px 56px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+p.sub{margin:0 0 20px;color:var(--ink2);font-size:14px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:0 0 14px;font-size:14px;color:var(--ink2)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink2);font:inherit;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 8px;font-size:13px;color:var(--ink2)}
+.legend button{appearance:none;border:0;background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:2px 0}
+.legend button.off{opacity:.35;text-decoration:line-through}
+.sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chart{position:relative;height:420px}
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted)}
+tr.home td{font-weight:600}
+.up{color:#0a7d3c}.down{color:#c0392b}
+@media (prefers-color-scheme: dark){.up{color:#4cc38a}.down{color:#f08a7c}}
+.note{margin-top:20px;color:var(--muted);font-size:13px}
+.note a{color:inherit}
+@media (max-width:560px){.chart{height:340px}}
+</style>
+</head>
+<body>
+<main>
+<h1>阿姆斯特丹房價線圖</h1>
+<p class="sub">每一季一個點。滑鼠移上去，看每一區從基準季到那一季漲了多少。</p>
+
+<div class="controls">
+  <div class="seg" role="group" aria-label="資料">
+    <button id="v-m2" aria-pressed="true">各區公寓每 m²</button>
+    <button id="v-cbs" aria-pressed="false">各地房價指數</button>
+  </div>
+  <div class="seg" role="group" aria-label="顯示">
+    <button id="m-pct" aria-pressed="true">漲幅 %</button>
+    <button id="m-raw" aria-pressed="false">原始數字</button>
+  </div>
+  <span>基準季 <select id="base" aria-label="基準季"></select></span>
+  <label><input type="checkbox" id="smooth"> 平滑（四季平均）</label>
+</div>
+
+<div class="legend" id="legend"></div>
+<div class="chart"><canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖"></canvas></div>
+
+<table aria-label="各區漲幅">
+  <thead><tr><th>地區</th><th id="th-base">基準季</th><th id="th-last">最新</th><th>漲幅</th></tr></thead>
+  <tbody id="tb"></tbody>
+</table>
+
+<p class="note" id="note"></p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DATA = /*DATA*/;
+const Q = DATA.quarters;
+const state = {view:'m2', mode:'pct', base:'2022Q2', smooth:false, hidden:{}};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const qLabel = q => q.slice(0,4)+' 年第 '+q.slice(5)+' 季';
+const fmtRaw = (v,unit) => unit==='eur' ? '€'+Math.round(v).toLocaleString('en-US') : v.toFixed(1);
+const fmtPct = v => (v>0?'+':'')+v.toFixed(1)+'%';
+
+function smooth(vals){
+  return vals.map((v,i)=>{
+    if(v==null) return null;
+    const w=[]; for(let k=i-3;k<=i;k++){ if(k>=0 && vals[k]!=null) w.push(vals[k]); }
+    return w.length<4 ? null : w.reduce((a,b)=>a+b,0)/4;
+  });
+}
+function prepared(){
+  const view = DATA.views[state.view];
+  const firstIdx = Math.min(...view.series.filter(s=>!s.home).map(s=>s.values.findIndex(v=>v!=null)));
+  const bi = Q.indexOf(state.base);
+  return {view, firstIdx, bi, series: view.series.map(s=>{
+    const vals = (state.smooth && !s.home) ? smooth(s.values) : s.values;
+    const b = vals[bi];
+    const pct = vals.map(v => (v==null || b==null) ? null : (v/b-1)*100);
+    return {...s, vals, pct, b};
+  })};
+}
+function availableBases(){
+  const view = DATA.views[state.view];
+  const ref = view.series.find(s=>!s.home).values;
+  return Q.filter((q,i)=>ref[i]!=null && (!state.smooth || i - ref.findIndex(v=>v!=null) >= 3));
+}
+
+let chart;
+function render(){
+  const bases = availableBases();
+  if(!bases.includes(state.base)) state.base = bases.includes('2022Q2') ? '2022Q2' : bases[0];
+  const sel = document.getElementById('base');
+  sel.innerHTML = bases.map(q=>`<option value="${q}"${q===state.base?' selected':''}>${qLabel(q)}${q==='2022Q2'?'（我買房那季）':''}</option>`).join('');
+
+  const P = prepared();
+  const labels = Q.slice(P.firstIdx);
+  const ink = css('--ink'), muted = css('--muted'), line = css('--line');
+  const datasets = P.series.map(s=>{
+    const arr = (state.mode==='pct' ? s.pct : s.vals).slice(P.firstIdx);
+    const color = s.home ? css('--home') : s.color;
+    return {label:s.label, data:arr, _raw:s.vals.slice(P.firstIdx), _pct:s.pct.slice(P.firstIdx),
+      borderColor:color, backgroundColor:color, borderWidth:s.home?3:2, borderDash:s.home?[6,4]:[],
+      pointRadius:s.home?5:2.5, pointHoverRadius:s.home?7:5, pointStyle:s.home?'rectRot':'circle',
+      spanGaps:!!s.home, tension:0, hidden:!!state.hidden[s.id], _id:s.id, _home:!!s.home};
+  });
+  const unit = P.view.unit;
+  const cfg = {type:'line', data:{labels, datasets}, options:{
+    responsive:true, maintainAspectRatio:false, animation:false,
+    interaction:{mode:'index', intersect:false},
+    plugins:{legend:{display:false}, tooltip:{
+      itemSort:(a,b)=>(b.parsed.y??-1e9)-(a.parsed.y??-1e9),
+      filter:i=>i.parsed.y!=null,
+      callbacks:{
+        title:items=>qLabel(items[0].label)+'（對比 '+qLabel(state.base)+'）',
+        label:c=>{
+          const raw=c.dataset._raw[c.dataIndex], pct=c.dataset._pct[c.dataIndex];
+          let t=c.dataset.label+'：'+fmtRaw(raw,unit);
+          if(pct!=null) t+='，'+fmtPct(pct);
+          return t;
+        }}}},
+    scales:{
+      x:{ticks:{color:muted, autoSkip:false, maxRotation:0,
+          callback:function(v){const q=this.getLabelForValue(v); return q.endsWith('Q1')?q.slice(0,4):'';}},
+         grid:{display:false}},
+      y:{ticks:{color:muted, callback:v=> state.mode==='pct' ? (v>0?'+':'')+v+'%' : (unit==='eur'?'€'+v.toLocaleString('en-US'):v)},
+         grid:{color:ctx=> (state.mode==='pct' && ctx.tick.value===0) ? muted : line}}
+    }}};
+  if(chart) chart.destroy();
+  chart = new Chart(document.getElementById('c'), cfg);
+
+  document.getElementById('legend').innerHTML = P.series.map(s=>
+    `<button data-id="${s.id}" class="${state.hidden[s.id]?'off':''}" aria-pressed="${!state.hidden[s.id]}"><span class="sw" style="background:${s.home?css('--home'):s.color}"></span>${s.label}</button>`).join('');
+
+  const last = Q.length-1;
+  document.getElementById('th-base').textContent = state.base.replace('Q',' Q');
+  document.getElementById('th-last').textContent = Q[last].replace('Q',' Q');
+  const rows = P.series.filter(s=>s.b!=null && s.vals[last]!=null)
+    .map(s=>({s, chg:(s.vals[last]/s.b-1)*100})).sort((a,b)=>b.chg-a.chg);
+  document.getElementById('tb').innerHTML = rows.map(({s,chg})=>
+    `<tr class="${s.home?'home':''}"><td>${s.label}</td><td>${fmtRaw(s.b,unit)}</td><td>${fmtRaw(s.vals[last],unit)}</td><td class="${chg>=0?'up':'down'}">${fmtPct(chg)}</td></tr>`).join('');
+
+  document.getElementById('note').innerHTML = state.view==='m2'
+    ? '資料：NVM 與 MVA 季報，公寓成交中位價每平方公尺，只算中古屋。小區每季成交件數少，單季會跳，看趨勢比較準。「我家」只有兩個點：買入價與 2026 年銀行估價，換算成每平方公尺。更新到 '+qLabel(Q[last])+'。'
+    : '資料：荷蘭統計局 CBS 既有住宅價格指數（2020 年 = 100），所有房型。區域是 CBS 的統計區，不是單一城市。更新到 '+qLabel(Q[last])+'。';
+}
+
+document.getElementById('legend').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  state.hidden[b.dataset.id]=!state.hidden[b.dataset.id]; render();
+});
+function seg(a,b,key,va,vb){
+  const A=document.getElementById(a), B=document.getElementById(b);
+  const set=v=>{state[key]=v; A.setAttribute('aria-pressed',v===va); B.setAttribute('aria-pressed',v===vb); render();};
+  A.onclick=()=>set(va); B.onclick=()=>set(vb);
+}
+seg('v-m2','v-cbs','view','m2','cbs');
+seg('m-pct','m-raw','mode','pct','raw');
+document.getElementById('base').onchange=e=>{state.base=e.target.value; render();};
+document.getElementById('smooth').onchange=e=>{state.smooth=e.target.checked; render();};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>

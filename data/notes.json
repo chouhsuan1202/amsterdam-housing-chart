@@ -1,0 +1,17 @@
+[
+ "CBS 指數：表 85792NED（全國、Amsterdam、Utrecht、Rotterdam、's-Gravenhage 四個大城市）與 85819NED（COROP）。基期 2020=100，欄位 PrijsindexVerkoopprijzen_1。2016Q1 到 2026Q2 共 42 季全有，2026Q2 狀態為 Definitief。",
+ "CBS 沒有 Almere、Haarlemmermeer、Zaanstad、Amstelveen、Haarlem 的獨立指數（85792NED 的城市只有四個）。用 COROP 當替代：Flevoland（含 Almere）、Zaanstreek（含 Zaanstad）、Agglomeratie Haarlem（含 Haarlemmermeer 一帶）。Amstelveen 屬 Groot-Amsterdam COROP，沒有單獨數字。",
+ "CBS 房型指數：表 85791NED（2020=100，到 2026Q2）。有全荷蘭 appartement 與 eengezinswoning。只有全國，沒有阿姆斯特丹或大區的房型指數。舊表 83910NED 基期是 2015=100 且只到 2023，不使用。",
+ "NVM/MVA 全部 PDF 都在 https://mva.nl/api/media/file/ 下（rapportages 頁面直接列出 212 份），沒有用到 a.storyblok.com 的檔案。",
+ "NVM 公寓（Appartement）欄位：成交中位價（報告單位為千歐元，已乘 1000，所以只有千元解析度）、每 m² 成交中位價、成交件數、銷售天數（verkooptijd）。公寓合計（不分屋齡）逐季數字最早從 2021Q1 開始，來自 2022 年報告的『去年同季』欄。2021Q1 以前沒有公寓合計數字，不是漏抓，是 MVA 當時不這樣發佈。",
+ "取值規則：同一季出現在多份報告時，優先用『該季當季報告』的首次發佈值（所以你給的已知值全部對得上）。沒有當季報告時，用之後最新的報告。之後報告會小幅修訂，公寓每 m² 修訂幅度平均 0.6%，最大 5.6%（樣本小的區）。",
+ "口徑斷層：2021Q3 報告起 MVA 改了每 m² 的算法，歷史也被回溯修訂（例：全市全部房型 2019Q4，舊報告 5551，新報告 5957）。所以 2018Q1 到 2021Q2 的舊口徑數字放在獨立的 nvm_legacy_* 序列，不要和新口徑接成一條線。新口徑的全部房型與屋齡序列從 2019Q3 起（取自 2021Q3、Q4 報告回溯值）。",
+ "屋齡分段（C 項）：沒有依面積（<50 m² 之類）的逐季數字。有依屋齡：2019Q3 到 2021Q3 為 1970 年以前 / 以後兩段（nvm_*_apt_le1970 與 gt1970），2019Q4 到 2021Q4 為四段（1945 以前、1945-1970、1970-1990、1990 以後，nvm_*_apt_lt1945 等，只有每 m²）。2021Q4 之後 MVA 不再發佈屋齡分段。舊口徑 2018Q1 到 2021Q2 的兩段在 nvm_legacy_*。",
+ "房型：全市排屋（tussen）與角間（hoek）每 m² 有逐季（新口徑 2019Q3 到 2026Q2 無缺季，另有舊口徑 2018Q1 到 2021Q2）。各區不分房型細項。",
+ "缺值：nvm_all_*（全部房型每 m²）2023Q1 缺，因為 2023Q1 到 2023Q3 的區報告 Totaal 每 m² 那一列在 PDF 裡是空白，之後報告也沒補。Weesp 從 2022Q4 才有（Weesp 2022 年併入阿姆斯特丹，MVA 從 2023Q4 報告起才發 Weesp 報告，2022Q4 取自其『去年同季』欄）；Weesp 全部房型每 m² 從 2023Q2 起。nvm_groot_amsterdam_* 缺 2021Q4（MVA 2022 年第 4 季 Groot-Amsterdam 報告 PDF 抽不到文字，疑似圖片），2021Q2 起才有。舊口徑 Zuidoost 1970 年以前 2019Q2 缺（2020Q2 報告該格是空的）。",
+ "小樣本警告：Zuidoost 每季公寓成交只有 44 到 106 件，Weesp 29 到 39 件，Noord 100 多件，單季跳動 10% 以上是常見，不是解析錯誤（已用多份報告交叉確認，例如 Noord 2023Q3 5262 對 2023Q4 5992，後續報告修訂為 5238 與 5962）。屋齡分段的 Zuidoost 1970 年以前每季只有 3 到 6 件，不可解讀。",
+ "2022 年 Q2 到 Q4 的 Groot-Amsterdam 與 Zaanstreek 報告抓得到公寓成交件數與價格，但不是本次主軸，未輸出 Zaanstreek。Groot-Amsterdam 公寓每 m² 2021Q2 到 2026Q2 有輸出。",
+ "單位：nvm_*_price 為歐元（千元解析度），nvm_*_m2 為歐元每 m²（GBO 居住面積），nvm_*_days 為天，nvm_*_n 為件數。",
+ "CBS 指數與 NVM 價格不可直接比較：CBS 是 SPPS 價格指數（含全部房型，已調整品質），NVM 是公寓成交中位數每 m²（組成會變）。",
+ "Zuidoost 屋齡四段中『1945 年以前』完全沒有數字（樣本太小，報告無此列）。"
+]
