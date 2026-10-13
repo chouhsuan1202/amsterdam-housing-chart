@@ -50,6 +50,10 @@ def pick(defs):
 nvm = pick(NVM)
 nvm.insert(0, {"id": "home", "label": "我家", "color": "#0b0b0b", "home": True,
                "values": [HOME_M2.get(q) for q in quarters]})
+# Same-building sales (46 m2, incl. parking), early 2026, per m2. One point, off by default.
+NEIGHBOUR_M2 = {"2026Q1": round(365500 / 46)}
+nvm.insert(1, {"id": "neighbour", "label": "同棟鄰居成交", "color": "#52514e", "home": True,
+               "values": [NEIGHBOUR_M2.get(q) for q in quarters]})
 cbs = pick(CBS)
 home_idx = [None] * len(quarters)
 payload = {"quarters": quarters, "generated": d["generated"],
