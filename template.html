@@ -18,9 +18,11 @@ p.sub{margin:0 0 20px;color:var(--ink2);font-size:14px}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
 label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 8px;font-size:13px;color:var(--ink2)}
-.legend button{appearance:none;border:0;background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:2px 0}
-.legend button.off{opacity:.35;text-decoration:line-through}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:13px;color:var(--ink)}
+.legend button{appearance:none;border:1px solid var(--ink2);background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:4px 10px;border-radius:999px}
+.legend button.off{border-color:var(--line);color:var(--muted)}
+.legend button.off .sw{opacity:.3}
+.hint{font-size:13px;color:var(--muted);margin:0 0 6px}
 .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
 .chart{position:relative;height:420px}
 table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;font-variant-numeric:tabular-nums}
@@ -53,6 +55,7 @@ tr.home td{font-weight:600}
   <label><input type="checkbox" id="smooth"> 平滑（四季平均）</label>
 </div>
 
+<p class="hint">點一下加入或拿掉一條線</p>
 <div class="legend" id="legend"></div>
 <div class="chart"><canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖"></canvas></div>
 
@@ -68,7 +71,9 @@ tr.home td{font-weight:600}
 <script>
 const DATA = /*DATA*/;
 const Q = DATA.quarters;
+const DEFAULT_ON = {m2:['home','nvm_city_m2'], cbs:['cbs_amsterdam','cbs_nl']};
 const state = {view:'m2', mode:'pct', base:'2022Q2', smooth:false, hidden:{}};
+for(const v in DATA.views) for(const x of DATA.views[v].series) if(!DEFAULT_ON[v].includes(x.id)) state.hidden[x.id]=true;
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const qLabel = q => q.slice(0,4)+' 年第 '+q.slice(5)+' 季';
 const fmtRaw = (v,unit) => unit==='eur' ? '€'+Math.round(v).toLocaleString('en-US') : v.toFixed(1);
@@ -147,7 +152,7 @@ function render(){
   const last = Q.length-1;
   document.getElementById('th-base').textContent = state.base.replace('Q',' Q');
   document.getElementById('th-last').textContent = Q[last].replace('Q',' Q');
-  const rows = P.series.filter(s=>s.b!=null && s.vals[last]!=null)
+  const rows = P.series.filter(s=>!state.hidden[s.id] && s.b!=null && s.vals[last]!=null)
     .map(s=>({s, chg:(s.vals[last]/s.b-1)*100})).sort((a,b)=>b.chg-a.chg);
   document.getElementById('tb').innerHTML = rows.map(({s,chg})=>
     `<tr class="${s.home?'home':''}"><td>${s.label}</td><td>${fmtRaw(s.b,unit)}</td><td>${fmtRaw(s.vals[last],unit)}</td><td class="${chg>=0?'up':'down'}">${fmtPct(chg)}</td></tr>`).join('');
