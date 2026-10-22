@@ -3,23 +3,23 @@
   python3 build_series.py            # CBS fetched live; NVM parsed from tmp/txt (must exist)
   python3 build_series.py --download # also (re)scrape mva.nl/informatie/wonen/rapportages, download PDFs, run pdftotext
 Needs: network for CBS, pdftotext (poppler) for the NVM part. Only writes inside this folder."""
-import json, os, re, sys, subprocess, urllib.request, collections, datetime
+import json, os, re, sys, subprocess, urllib.request, urllib.parse, collections, datetime
 HERE=os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0,HERE)
 import build_cbs, parse_nvm
 TMP=os.path.join(HERE,"tmp"); PDF=os.path.join(TMP,"pdf"); TXT=os.path.join(TMP,"txt")
 def download():
     os.makedirs(PDF,exist_ok=True); os.makedirs(TXT,exist_ok=True)
     html=urllib.request.urlopen(urllib.request.Request("https://mva.nl/informatie/wonen/rapportages",headers={"User-Agent":"Mozilla/5.0"}),timeout=60).read().decode("utf-8","ignore")
-    links=sorted(set(re.findall(r"/api/media/file/[A-Za-z0-9._-]+\.pdf",html)))
+    links=sorted(set(re.findall(r"/api/media/file/[A-Za-z0-9._%-]+\.pdf",html)))  # %20: 2026Q3 district files have spaces
     for l in links:
-        dst=os.path.join(PDF,os.path.basename(l))
+        dst=os.path.join(PDF,urllib.parse.unquote(os.path.basename(l)))
         if not os.path.exists(dst) or os.path.getsize(dst)==0:
             subprocess.run(["curl","-sL","--max-time","90","-o",dst,"https://mva.nl"+l])
-        t=os.path.join(TXT,os.path.basename(l)[:-4]+".txt")
+        t=os.path.join(TXT,os.path.basename(dst)[:-4]+".txt")
         if not os.path.exists(t): subprocess.run(["pdftotext","-layout",dst,t],stderr=subprocess.DEVNULL)
 AREAS={"city":"全市 Amsterdam","centrum":"中區 Centrum","zuid":"南區 Zuid","west":"西區 West","oost":"東區 Oost","noord":"北區 Noord",
  "nieuw_west":"新西區 Nieuw-West","zuidoost":"東南區 Zuidoost","weesp":"Weesp","groot_amsterdam":"大阿姆斯特丹 COROP"}
-def url_of(f): return "https://mva.nl/api/media/file/"+f.replace(".txt",".pdf")
+def url_of(f): return "https://mva.nl/api/media/file/"+urllib.parse.quote(f.replace(".txt",".pdf"))
 def pick(recs):
     """choose one record per period: first publication (cur==period, new format first), else latest revision."""
     best={}
@@ -76,7 +76,7 @@ def main():
         mk(f"nvm_city_{row}_m2",f"全市 {lab} 每 m²","nvm_type","eur_per_m2",[G("city",row,"m2","new"),G("city",row,"m2","old2")])
         mk(f"nvm_legacy_city_{row}_m2",f"全市 {lab} 每 m²（舊口徑）","nvm_legacy","eur_per_m2",[G("city",row,"m2","legacy")])
     notes=NOTES
-    out=dict(generated="2026-10-13",quarters=qs,series=series,notes=notes)
+    out=dict(generated="2026-10-22",quarters=qs,series=series,notes=notes)
     json.dump(out,open(os.path.join(HERE,"series.json"),"w"),ensure_ascii=False,indent=1)
     with open(os.path.join(HERE,"sources.md"),"w") as f:
         f.write("# Sources per series per quarter\n\nPDF files are under https://mva.nl/api/media/file/<name>.pdf . CBS values come from the OData TypedDataSet of the table named.\n\n")

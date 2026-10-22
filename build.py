@@ -60,38 +60,45 @@ cbs = pick(CBS)
 # Annual change assumptions (low, mid, high). Sources: ABN AMRO 2026-10, Rabobank 2026-09, ING 2026-09,
 # DNB 2026-06 for the Netherlands; for Amsterdam there is no bank forecast, so these are a research
 # judgement built on those reports (see Notion page). H2 2026 is the remaining half year.
-LAST = "2026Q2"
-FUTURE = ["2026Q3", "2026Q4"] + [f"{y}Q{q}" for y in (2027, 2028) for q in (1, 2, 3, 4)]
+LAST = "2026Q3"
+FUTURE = ["2026Q4"] + [f"{y}Q{q}" for y in (2027, 2028) for q in (1, 2, 3, 4)]
 ASSUME = {
     "home":          {"2026H2": (0.0, 0.0, 0.0), "2027": (-4.0, -0.5, 1.0), "2028": (-2.0, 1.0, 3.0)},
     "nvm_city_m2":   {"2026H2": (-0.5, 0.2, 1.0), "2027": (-3.0, 0.5, 2.0), "2028": (-1.0, 2.0, 4.0)},
     "cbs_amsterdam": {"2026H2": (-0.5, 0.2, 1.0), "2027": (-3.0, 0.5, 2.0), "2028": (-1.0, 2.0, 4.0)},
     "cbs_nl":        {"2026H2": (0.5, 1.2, 1.8),  "2027": (1.0, 2.5, 3.5),  "2028": (1.0, 3.0, 4.0)},
 }
+# My home has no 2026Q3 point (no new valuation), so its forecast still starts from 2026Q2.
+HOME_START = "2026Q2"
 all_q = quarters + FUTURE
 li = quarters.index(LAST)
 
 
-def forecast(start, a):
+def forecast(start, a, start_q=LAST):
+    """2026 quarters step half of the 2026H2 assumption each, so a 2026Q3 start walks only 2026Q4."""
+    si = all_q.index(start_q)
     out = {"lo": [], "mid": [], "hi": []}
     for k, name in enumerate(("lo", "mid", "hi")):
         v = start
         path = []
-        for q in FUTURE:
+        for q in all_q[si + 1:]:
             if q.startswith("2026"):
                 step = (1 + a["2026H2"][k] / 100) ** (1 / 2)
             else:
                 step = (1 + a[q[:4]][k] / 100) ** (1 / 4)
             v *= step
             path.append(round(v, 1))
-        out[name] = [None] * li + [start] + path
+        out[name] = [None] * si + [start] + path
     return out
 
 
 for group in (nvm, cbs):
     for srs in group:
         srs["values"] = srs["values"] + [None] * len(FUTURE)
-        if srs["id"] in ASSUME and srs["values"][li] is not None:
+        if srs["id"] == "home":
+            hi_ = all_q.index(HOME_START)
+            srs["fc"] = forecast(srs["values"][hi_], ASSUME["home"], HOME_START)
+        elif srs["id"] in ASSUME and srs["values"][li] is not None:
             srs["fc"] = forecast(srs["values"][li], ASSUME[srs["id"]])
 
 home_fc = next(x for x in nvm if x["id"] == "home")["fc"]

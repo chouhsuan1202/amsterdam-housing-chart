@@ -1,6 +1,6 @@
 """CBS part of series building. Fetches OData, returns dict of series. Rerunnable (needs network)."""
 import json, urllib.request, urllib.parse
-Q0, Q1 = (2016, 1), (2026, 2)
+Q0, Q1 = (2016, 1), (2026, 3)
 def quarters():
     out=[]; y,q=Q0
     while (y,q)<=Q1:

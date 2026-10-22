@@ -6,51 +6,51 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 
 ## cbs_nl (全荷蘭（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_amsterdam (阿姆斯特丹（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_utrecht (烏特勒支市（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_rotterdam (鹿特丹（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_denhaag (海牙（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85792NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_groot_amsterdam (大阿姆斯特丹 COROP（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_haarlem_agglo (哈倫都會區 COROP（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_zaanstreek (贊斯特雷克 COROP（含 Zaanstad，CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_flevoland (弗萊福蘭省 COROP（含 Almere，CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_utrecht_corop (烏特勒支 COROP（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85819NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_nl_apartment (全荷蘭 appartement（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85791NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85791NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## cbs_nl_eengezins (全荷蘭 eengezinswoning（CBS 指數）)
 
-- 2016Q1 to 2026Q2: CBS 85791NED TypedDataSet PrijsindexVerkoopprijzen_1 
+- 2016Q1 to 2026Q3: CBS 85791NED TypedDataSet PrijsindexVerkoopprijzen_1 
 
 ## nvm_city_m2 (全市 Amsterdam 公寓每 m²)
 
@@ -76,6 +76,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_city_price (全市 Amsterdam 公寓成交中位價)
 
@@ -101,6 +102,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_city_n (全市 Amsterdam 公寓成交件數)
 
@@ -126,6 +128,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_city_days (全市 Amsterdam 公寓銷售天數)
 
@@ -151,6 +154,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_all_city_m2 (全市 Amsterdam 全部房型每 m²)
 
@@ -178,6 +182,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_legacy_all_city_m2 (全市 Amsterdam 全部房型每 m²（舊口徑）)
 
@@ -218,6 +223,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-centrum-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-centrum-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
 
 ## nvm_centrum_price (中區 Centrum 公寓成交中位價)
 
@@ -243,6 +249,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-centrum-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-centrum-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
 
 ## nvm_centrum_n (中區 Centrum 公寓成交件數)
 
@@ -268,6 +275,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-centrum-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-centrum-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
 
 ## nvm_centrum_days (中區 Centrum 公寓銷售天數)
 
@@ -293,6 +301,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-centrum-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-centrum-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
 
 ## nvm_all_centrum_m2 (中區 Centrum 全部房型每 m²)
 
@@ -315,9 +324,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-centrum-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-centrum-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-centrum-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-centrum-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-centrum-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-centrum-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-centrum-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-centrum-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Centrum 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Centrum%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_centrum_m2 (中區 Centrum 全部房型每 m²（舊口徑）)
 
@@ -358,6 +369,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuid-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuid-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
 
 ## nvm_zuid_price (南區 Zuid 公寓成交中位價)
 
@@ -383,6 +395,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuid-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuid-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
 
 ## nvm_zuid_n (南區 Zuid 公寓成交件數)
 
@@ -408,6 +421,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuid-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuid-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
 
 ## nvm_zuid_days (南區 Zuid 公寓銷售天數)
 
@@ -433,6 +447,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuid-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuid-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
 
 ## nvm_all_zuid_m2 (南區 Zuid 全部房型每 m²)
 
@@ -455,9 +470,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-zuid-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-zuid-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-zuid-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-zuid-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuid-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuid-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuid-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuid-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuid 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuid%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_zuid_m2 (南區 Zuid 全部房型每 m²（舊口徑）)
 
@@ -498,6 +515,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
 
 ## nvm_west_price (西區 West 公寓成交中位價)
 
@@ -523,6 +541,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
 
 ## nvm_west_n (西區 West 公寓成交件數)
 
@@ -548,6 +567,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
 
 ## nvm_west_days (西區 West 公寓銷售天數)
 
@@ -573,6 +593,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
 
 ## nvm_all_west_m2 (西區 West 全部房型每 m²)
 
@@ -595,9 +616,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-west-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-west-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-west-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-west-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20West%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_west_m2 (西區 West 全部房型每 m²（舊口徑）)
 
@@ -638,6 +661,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-oost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-oost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
 
 ## nvm_oost_price (東區 Oost 公寓成交中位價)
 
@@ -663,6 +687,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-oost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-oost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
 
 ## nvm_oost_n (東區 Oost 公寓成交件數)
 
@@ -688,6 +713,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-oost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-oost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
 
 ## nvm_oost_days (東區 Oost 公寓銷售天數)
 
@@ -713,6 +739,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-oost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-oost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
 
 ## nvm_all_oost_m2 (東區 Oost 全部房型每 m²)
 
@@ -735,9 +762,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-oost-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-oost-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-oost-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-oost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-oost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-oost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-oost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-oost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Oost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Oost%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_oost_m2 (東區 Oost 全部房型每 m²（舊口徑）)
 
@@ -778,6 +807,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-noord-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-noord-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
 
 ## nvm_noord_price (北區 Noord 公寓成交中位價)
 
@@ -803,6 +833,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-noord-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-noord-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
 
 ## nvm_noord_n (北區 Noord 公寓成交件數)
 
@@ -828,6 +859,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-noord-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-noord-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
 
 ## nvm_noord_days (北區 Noord 公寓銷售天數)
 
@@ -853,6 +885,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-noord-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-noord-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
 
 ## nvm_all_noord_m2 (北區 Noord 全部房型每 m²)
 
@@ -875,9 +908,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-noord-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-noord-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-noord-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-noord-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-noord-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-noord-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-noord-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-noord-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Noord 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Noord%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_noord_m2 (北區 Noord 全部房型每 m²（舊口徑）)
 
@@ -918,6 +953,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-nieuw-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-nieuw-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
 
 ## nvm_nieuw_west_price (新西區 Nieuw-West 公寓成交中位價)
 
@@ -943,6 +979,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-nieuw-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-nieuw-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
 
 ## nvm_nieuw_west_n (新西區 Nieuw-West 公寓成交件數)
 
@@ -968,6 +1005,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-nieuw-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-nieuw-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
 
 ## nvm_nieuw_west_days (新西區 Nieuw-West 公寓銷售天數)
 
@@ -993,6 +1031,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-nieuw-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-nieuw-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
 
 ## nvm_all_nieuw_west_m2 (新西區 Nieuw-West 全部房型每 m²)
 
@@ -1015,9 +1054,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-nieuw-west-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-nieuw-west-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-nieuw-west-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-nieuw-west-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-nieuw-west-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-nieuw-west-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-nieuw-west-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Nieuw-West 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Nieuw-West%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_nieuw_west_m2 (新西區 Nieuw-West 全部房型每 m²（舊口徑）)
 
@@ -1058,6 +1099,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuidoost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuidoost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
 
 ## nvm_zuidoost_price (東南區 Zuidoost 公寓成交中位價)
 
@@ -1083,6 +1125,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuidoost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuidoost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
 
 ## nvm_zuidoost_n (東南區 Zuidoost 公寓成交件數)
 
@@ -1108,6 +1151,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuidoost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuidoost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
 
 ## nvm_zuidoost_days (東南區 Zuidoost 公寓銷售天數)
 
@@ -1133,6 +1177,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuidoost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuidoost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
 
 ## nvm_all_zuidoost_m2 (東南區 Zuidoost 全部房型每 m²)
 
@@ -1155,9 +1200,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: amsterdam-zuidoost-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2024.pdf
 - 2025Q1: amsterdam-zuidoost-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2025.pdf
 - 2025Q2: amsterdam-zuidoost-q2-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-zuidoost-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-4e-kwartaal-2025.pdf
 - 2026Q1: amsterdam-zuidoost-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-zuidoost-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-zuidoost-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Zuidoost 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Zuidoost%203e%20kwartaal%202026.pdf
 
 ## nvm_legacy_all_zuidoost_m2 (東南區 Zuidoost 全部房型每 m²（舊口徑）)
 
@@ -1191,6 +1238,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
 - 2026Q1: weesp-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-weesp-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-weesp-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
 
 ## nvm_weesp_price (Weesp 公寓成交中位價)
 
@@ -1209,6 +1257,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
 - 2026Q1: weesp-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-weesp-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-weesp-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
 
 ## nvm_weesp_n (Weesp 公寓成交件數)
 
@@ -1227,6 +1276,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
 - 2026Q1: weesp-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-weesp-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-weesp-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
 
 ## nvm_weesp_days (Weesp 公寓銷售天數)
 
@@ -1245,6 +1295,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
 - 2026Q1: weesp-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-weesp-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-weesp-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
 
 ## nvm_all_weesp_m2 (Weesp 全部房型每 m²)
 
@@ -1257,9 +1308,11 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2024Q4: weesp-4e-kwartaal-2024.pdf https://mva.nl/api/media/file/weesp-4e-kwartaal-2024.pdf
 - 2025Q1: weesp-1e-kwartaal-2025.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2025.pdf
 - 2025Q2: weesp-2e-q2-2025.pdf https://mva.nl/api/media/file/weesp-2e-q2-2025.pdf
-- 2025Q3 to 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
+- 2025Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
+- 2025Q4: amsterdam-weesp-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/amsterdam-weesp-4e-kwartaal-2025.pdf
 - 2026Q1: weesp-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/weesp-1e-kwartaal-2026.pdf
 - 2026Q2: amsterdam-weesp-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/amsterdam-weesp-2e-kwartaal-2026.pdf
+- 2026Q3: Amsterdam Weesp 3e kwartaal 2026.pdf https://mva.nl/api/media/file/Amsterdam%20Weesp%203e%20kwartaal%202026.pdf
 
 ## nvm_groot_amsterdam_m2 (大阿姆斯特丹 COROP 公寓每 m²)
 
@@ -1282,6 +1335,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_groot_amsterdam_price (大阿姆斯特丹 COROP 公寓成交中位價)
 
@@ -1304,6 +1358,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_groot_amsterdam_n (大阿姆斯特丹 COROP 公寓成交件數)
 
@@ -1326,6 +1381,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_groot_amsterdam_days (大阿姆斯特丹 COROP 公寓銷售天數)
 
@@ -1348,6 +1404,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_all_groot_amsterdam_m2 (大阿姆斯特丹 COROP 全部房型每 m²)
 
@@ -1370,6 +1427,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-regio-groot-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_city_apt_le1970_m2 (全市 Amsterdam 公寓（1970 年以前）每 m²)
 
@@ -1887,6 +1945,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_legacy_city_tussen_m2 (全市 排屋 Tussenwoning 每 m²（舊口徑）)
 
@@ -1928,6 +1987,7 @@ Rule: a quarter's value comes from the report where that quarter is the current 
 - 2025Q4: marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-4e-kwartaal-2025.pdf
 - 2026Q1: marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-1e-kwartaal-2026.pdf
 - 2026Q2: marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-2e-kwartaal-2026.pdf
+- 2026Q3: marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf https://mva.nl/api/media/file/marktoverzicht-gemeente-amsterdam-3e-kwartaal-2026.pdf
 
 ## nvm_legacy_city_hoek_m2 (全市 角間 Hoekwoning 每 m²（舊口徑）)
 
