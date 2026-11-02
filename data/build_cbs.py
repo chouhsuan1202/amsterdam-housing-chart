@@ -1,6 +1,11 @@
 """CBS part of series building. Fetches OData, returns dict of series. Rerunnable (needs network)."""
-import json, urllib.request, urllib.parse
+import json, time, urllib.request, urllib.parse, urllib.error
 Q0, Q1 = (2016, 1), (2026, 3)
+RETRIES = 3  # 網路暫時失敗時重試次數（間隔 2、4 秒）
+
+
+class CBSError(Exception):
+    """CBS API 抓不到資料或回傳格式跟預期不同。"""
 def quarters():
     out=[]; y,q=Q0
     while (y,q)<=Q1:
@@ -8,12 +13,28 @@ def quarters():
         if q==5: y+=1;q=1
     return out
 def get(url):
-    with urllib.request.urlopen(url, timeout=60) as r: return json.load(r)
+    """抓 JSON，逾時或連線錯誤時重試；回傳格式不對直接中止，不寫出半套資料。"""
+    last = None
+    for attempt in range(RETRIES):
+        try:
+            with urllib.request.urlopen(url, timeout=60) as r:
+                data = json.load(r)
+            if not isinstance(data, dict) or not isinstance(data.get("value"), list):
+                raise CBSError(f"CBS 回傳格式改變（找不到 value 陣列）：{url}")
+            return data
+        except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError) as e:
+            last = e
+            if attempt < RETRIES - 1:
+                time.sleep(2 ** (attempt + 1))
+    raise CBSError(f"CBS API 連線失敗（重試 {RETRIES} 次）：{last}")
 def fetch(table, dimname, keys, field):
     flt=" or ".join(f"{dimname} eq '{k}'" for k in keys)
     url=f"https://opendata.cbs.nl/ODataApi/odata/{table}/TypedDataSet?$format=json&$filter="+urllib.parse.quote(f"({flt}) and Perioden ge '2016KW01'")
     rows=get(url)['value']; res={}
+    if not rows: raise CBSError(f"CBS {table} 沒有回傳任何資料列，請確認表格代號與篩選條件")
     for r in rows:
+        if not all(k in r for k in ('Perioden', dimname, field)):
+            raise CBSError(f"CBS {table} 欄位改變，找不到 Perioden、{dimname} 或 {field}")
         p=r['Perioden']
         if 'KW' not in p: continue
         qk=f"{p[:4]}Q{int(p[-2:])}"
@@ -39,6 +60,7 @@ def build_cbs():
             # CBS keys have trailing spaces; match with padded keys
             cache[(tab,dim)]=fetch_pad(tab,dim,ks)
         d=cache[(tab,dim)].get(key,{})
+        if not d: print(f"警告：CBS {tab} 沒有 {key} 的資料，{sid} 會是全空序列")
         series.append({"id":sid,"label_zh":label,"group":"cbs_index","unit":"index","base":"2020=100",
           "source":f"CBS {tab}","source_url":f"https://opendata.cbs.nl/ODataApi/odata/{tab}/TypedDataSet","field":"PrijsindexVerkoopprijzen_1",
           "values":[d.get(q) for q in qs]})
