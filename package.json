@@ -1,0 +1,14 @@
+{
+  "name": "amsterdam-housing-chart",
+  "private": true,
+  "description": "阿姆斯特丹房價線圖",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "node --test tests/transform.test.js tests/data.test.js && python3 -m unittest discover -s tests",
+    "test:smoke": "node --test tests/smoke.test.js",
+    "test:all": "npm test && npm run test:smoke"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
