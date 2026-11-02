@@ -81,7 +81,7 @@ class BuildTest(unittest.TestCase):
         self.assertAlmostEqual(r, 1.025, places=2)
 
     def test_no_em_dash_in_page(self):
-        self.assertNotIn("—", (ROOT / "template.html").read_text())
+        self.assertNotIn(chr(0x2014), (ROOT / "template.html").read_text())
 
 
 if __name__ == "__main__":
