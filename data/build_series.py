@@ -31,6 +31,8 @@ def pick(recs):
     return {p:v[1] for p,v in best.items()}
 def main():
     if "--download" in sys.argv: download()
+    if not os.path.isdir(TXT):
+        sys.exit(f"找不到 {TXT}，請先用 --download 下載並轉出 NVM 報告文字檔")
     qs,series=build_cbs.build_cbs(); idx={q:i for i,q in enumerate(qs)}
     srcmap={}  # series id -> {quarter: file}
     for s in series:
@@ -76,9 +78,14 @@ def main():
         mk(f"nvm_city_{row}_m2",f"全市 {lab} 每 m²","nvm_type","eur_per_m2",[G("city",row,"m2","new"),G("city",row,"m2","old2")])
         mk(f"nvm_legacy_city_{row}_m2",f"全市 {lab} 每 m²（舊口徑）","nvm_legacy","eur_per_m2",[G("city",row,"m2","legacy")])
     notes=NOTES
-    out=dict(generated="2026-10-22",quarters=qs,series=series,notes=notes)
-    json.dump(out,open(os.path.join(HERE,"series.json"),"w"),ensure_ascii=False,indent=1)
-    with open(os.path.join(HERE,"sources.md"),"w") as f:
+    # generated 用實際執行日期（原本寫死 2026-10-22，重跑後也不會更新）
+    out=dict(generated=datetime.date.today().isoformat(),quarters=qs,series=series,notes=notes)
+    # 先寫暫存檔再改名，中途失敗不會留下半個 series.json
+    tmp_json=os.path.join(HERE,"series.json.tmp")
+    with open(tmp_json,"w",encoding="utf-8") as f: json.dump(out,f,ensure_ascii=False,indent=1)
+    os.replace(tmp_json,os.path.join(HERE,"series.json"))
+    tmp_md=os.path.join(HERE,"sources.md.tmp")
+    with open(tmp_md,"w",encoding="utf-8") as f:
         f.write("# Sources per series per quarter\n\nPDF files are under https://mva.nl/api/media/file/<name>.pdf . CBS values come from the OData TypedDataSet of the table named.\n\n")
         f.write("Rule: a quarter's value comes from the report where that quarter is the current quarter (first publication). If none, from the latest later report that shows it.\n\n")
         for s in series:
@@ -92,6 +99,7 @@ def main():
                 u=url_of(fn) if fn.endswith(".txt") else s["source_url"]
                 f.write(f"- {a if a==b else a+' to '+b}: {fn.replace('.txt','.pdf') if fn.endswith('.txt') else fn} {u if fn.endswith('.txt') else ''}\n")
             f.write("\n")
+    os.replace(tmp_md,os.path.join(HERE,"sources.md"))
 NOTES=[]  # filled by notes.py override below
 if os.path.exists(os.path.join(HERE,"notes.json")): NOTES=json.load(open(os.path.join(HERE,"notes.json")))
 if __name__=="__main__": main()

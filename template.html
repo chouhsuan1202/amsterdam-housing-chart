@@ -5,38 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>阿姆斯特丹房價線圖</title>
 <style>
-:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;--home:#0b0b0b}
-@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec}}
+/* 色彩：--muted 淺色模式由 #898781 加深到 #706f6a，文字對比 4.9:1，符合 WCAG AA */
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#706f6a;--line:#e1e0d9;--home:#0b0b0b;--focus:#0b0b0b}
+@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec;--focus:#f0efec}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif}
 main{max-width:920px;margin:0 auto;padding:28px 16px 56px}
 h1{font-size:22px;font-weight:600;margin:0 0 4px}
 p.sub{margin:0 0 20px;color:var(--ink2);font-size:14px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:0 0 14px;font-size:14px;color:var(--ink2)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{appearance:none;border:0;background:transparent;color:var(--ink2);font:inherit;padding:6px 12px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.seg button:focus-visible{outline-offset:-3px}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;max-width:100%}
 label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:13px;color:var(--ink)}
-.legend button{appearance:none;border:1px solid var(--ink2);background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:4px 10px;border-radius:999px}
+.legend button{appearance:none;border:1px solid var(--ink2);background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:4px 10px;border-radius:999px;min-height:30px}
 .legend button.off{border-color:var(--line);color:var(--muted)}
 .legend button.off .sw{opacity:.3}
 .hint{font-size:13px;color:var(--muted);margin:0 0 6px}
-.sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+.sw{width:14px;height:3px;border-radius:2px;display:inline-block;flex:none}
 .chart{position:relative;height:420px}
-table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;font-variant-numeric:tabular-nums}
+.chart canvas{max-width:100%}
+/* 圖表區的載入中、錯誤、空狀態訊息，蓋在圖上 */
+.chart-status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin:0;padding:16px;text-align:center;font-size:14px;color:var(--ink2);pointer-events:none}
+.chart-status[hidden]{display:none}
+.chart-status[data-kind="loading"],.chart-status[data-kind="error"]{background:var(--bg);border:1px dashed var(--line);border-radius:8px}
+.chart-status[data-kind="error"]{color:var(--ink)}
+.chart-status button{pointer-events:auto;appearance:none;font:inherit;color:var(--bg);background:var(--ink);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
+.table-wrap{overflow-x:auto;margin-top:22px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
-th{font-weight:500;color:var(--muted)}
-tr.home td{font-weight:600}
+thead th{font-weight:500;color:var(--muted)}
+tbody th{font-weight:400;color:inherit}
+tr.home th,tr.home td{font-weight:600}
+.asof{font-size:12px;font-weight:400;color:var(--muted)}
+@media (max-width:560px){.asof{display:block}}
+.table-empty{margin:8px 0 0;font-size:14px;color:var(--muted)}
 .up{color:#0a7d3c}.down{color:#c0392b}
 @media (prefers-color-scheme: dark){.up{color:#4cc38a}.down{color:#f08a7c}}
 .key{margin:14px 0 0;color:#c0392b;font-weight:600;font-size:15px}
+.key:empty{display:none}
 @media (prefers-color-scheme: dark){.key{color:#f08a7c}}
 .note{margin-top:20px;color:var(--muted);font-size:13px}
 .note a{color:inherit}
-@media (max-width:560px){.chart{height:340px}}
+.fatal{margin:24px 0;padding:16px;border:1px solid #c0392b;border-radius:8px;color:var(--ink)}
+.fatal[hidden]{display:none}
+.fatal p{margin:0}
+body.is-fatal .app{display:none}
+@media (max-width:560px){.chart{height:340px}.controls{gap:10px 16px}}
 </style>
 </head>
 <body>
@@ -44,173 +65,54 @@ tr.home td{font-weight:600}
 <h1>阿姆斯特丹房價線圖</h1>
 <p class="sub">每一季一個點。滑鼠移上去，看每一區從基準季到那一季漲了多少。</p>
 
+<div class="fatal" id="fatal" role="alert" hidden><p data-msg></p></div>
+
+<!-- 沒有 JavaScript 時的提示 -->
+<noscript><p class="fatal">這個頁面需要開啟 JavaScript 才能顯示圖表與表格。</p></noscript>
+
+<div class="app">
 <div class="controls">
   <div class="seg" role="group" aria-label="資料">
-    <button id="v-m2" aria-pressed="true">各區公寓每 m²</button>
-    <button id="v-cbs" aria-pressed="false">各地房價指數</button>
+    <button type="button" id="v-m2" aria-pressed="true">各區公寓每 m²</button>
+    <button type="button" id="v-cbs" aria-pressed="false">各地房價指數</button>
   </div>
   <div class="seg" role="group" aria-label="顯示">
-    <button id="m-pct" aria-pressed="true">漲幅 %</button>
-    <button id="m-raw" aria-pressed="false">原始數字</button>
+    <button type="button" id="m-pct" aria-pressed="true">漲幅 %</button>
+    <button type="button" id="m-raw" aria-pressed="false">原始數字</button>
   </div>
-  <span>基準季 <select id="base" aria-label="基準季"></select></span>
+  <label for="base">基準季 <select id="base"></select></label>
   <label><input type="checkbox" id="smooth"> 平滑（四季平均）</label>
 </div>
 
-<p class="hint">點一下加入或拿掉一條線</p>
-<div class="legend" id="legend"></div>
-<div class="chart"><canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖，含到 2028 年底的預估"></canvas></div>
+<p class="hint" id="legend-hint">點一下加入或拿掉一條線</p>
+<div class="legend" id="legend" role="group" aria-labelledby="legend-hint"></div>
+<div class="chart">
+  <canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖，含到 2028 年底的預估"></canvas>
+  <div class="chart-status" id="chart-status" role="status" data-kind="loading">
+    <p data-msg style="margin:0">圖表載入中…</p>
+    <button type="button" id="chart-retry" hidden>重新載入圖表</button>
+  </div>
+</div>
 <p class="key" id="key"></p>
 
-<table aria-label="各區漲幅">
-  <thead><tr><th>地區</th><th id="th-base">基準季</th><th id="th-last">最新</th><th>漲幅</th></tr></thead>
+<div class="table-wrap">
+<table>
+  <caption class="sr-only">各線從基準季到最新一季的漲幅，由高到低</caption>
+  <thead><tr><th scope="col">地區</th><th scope="col" id="th-base">基準季</th><th scope="col" id="th-last">最新</th><th scope="col">漲幅</th></tr></thead>
   <tbody id="tb"></tbody>
 </table>
+</div>
+<p class="table-empty" id="table-empty" hidden>目前沒有可比較的線。請在上方選一條有基準季數字的線。</p>
 
 <p class="note" id="note"></p>
+</div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-const DATA = /*DATA*/;
-const Q = DATA.quarters;
-const LI = Q.indexOf(DATA.lastActual);
-const wan = v => { const w=Math.round(Math.abs(v)/1000)/10; const a=Math.floor(w), b=Math.round((w-a)*10); return '€'+a+' 萬'+(b?' '+b:''); };
-const DEFAULT_ON = {m2:['home','nvm_city_m2'], cbs:['cbs_amsterdam','cbs_nl']};
-const state = {view:'m2', mode:'pct', base:'2022Q2', smooth:false, hidden:{}};
-for(const v in DATA.views) for(const x of DATA.views[v].series) if(!DEFAULT_ON[v].includes(x.id)) state.hidden[x.id]=true;
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const qLabel = q => q.slice(0,4)+' 年第 '+q.slice(5)+' 季';
-const fmtRaw = (v,unit) => unit==='eur' ? '€'+Math.round(v).toLocaleString('en-US') : v.toFixed(1);
-const fmtPct = v => (v>0?'+':'')+v.toFixed(1)+'%';
-
-function smooth(vals){
-  return vals.map((v,i)=>{
-    if(v==null) return null;
-    const w=[]; for(let k=i-3;k<=i;k++){ if(k>=0 && vals[k]!=null) w.push(vals[k]); }
-    return w.length<4 ? null : w.reduce((a,b)=>a+b,0)/4;
-  });
-}
-function prepared(){
-  const view = DATA.views[state.view];
-  const firstIdx = Math.min(...view.series.filter(s=>!s.home).map(s=>s.values.findIndex(v=>v!=null)));
-  const bi = Q.indexOf(state.base);
-  return {view, firstIdx, bi, series: view.series.map(s=>{
-    const vals = (state.smooth && !s.home) ? smooth(s.values) : s.values;
-    const b = vals[bi];
-    const pct = vals.map(v => (v==null || b==null) ? null : (v/b-1)*100);
-    const toPct = arr => arr.map(v => (v==null || b==null) ? null : (v/b-1)*100);
-    const fcp = s.fc ? {lo:toPct(s.fc.lo), mid:toPct(s.fc.mid), hi:toPct(s.fc.hi)} : null;
-    return {...s, vals, pct, b, fcp};
-  })};
-}
-function availableBases(){
-  const view = DATA.views[state.view];
-  const ref = view.series.find(s=>!s.home).values;
-  return Q.filter((q,i)=>i<=LI && ref[i]!=null && (!state.smooth || i - ref.findIndex(v=>v!=null) >= 3));
-}
-
-let chart;
-function render(){
-  const bases = availableBases();
-  if(!bases.includes(state.base)) state.base = bases.includes('2022Q2') ? '2022Q2' : bases[0];
-  const sel = document.getElementById('base');
-  sel.innerHTML = bases.map(q=>`<option value="${q}"${q===state.base?' selected':''}>${qLabel(q)}${q==='2022Q2'?'（我買房那季）':''}</option>`).join('');
-
-  const P = prepared();
-  const labels = Q.slice(P.firstIdx);
-  const ink = css('--ink'), muted = css('--muted'), line = css('--line');
-  const datasets = P.series.map(s=>{
-    const arr = (state.mode==='pct' ? s.pct : s.vals).slice(P.firstIdx);
-    const color = s.home ? css('--home') : s.color;
-    return {label:s.label, data:arr, _raw:s.vals.slice(P.firstIdx), _pct:s.pct.slice(P.firstIdx),
-      borderColor:color, backgroundColor:color, borderWidth:s.home?3:2, borderDash:s.home?[6,4]:[],
-      pointRadius:s.home?5:2.5, pointHoverRadius:s.home?7:5, pointStyle:s.home?'rectRot':'circle',
-      spanGaps:!!s.home, tension:0, hidden:!!state.hidden[s.id], _id:s.id, _home:!!s.home};
-  });
-  P.series.forEach(s=>{
-    if(!s.fc || state.hidden[s.id]) return;
-    const color = s.home ? css('--home') : s.color;
-    const pick = k => (state.mode==='pct' ? s.fcp[k] : s.fc[k]).slice(P.firstIdx);
-    const common = {borderColor:color, backgroundColor:color+'22', pointRadius:0, pointHoverRadius:0, tension:0, _fc:true, _id:s.id};
-    datasets.push({...common, label:s.label+' 預估低', data:pick('lo'), borderWidth:1, borderDash:[2,3], fill:false, _band:'lo'});
-    datasets.push({...common, label:s.label+' 預估高', data:pick('hi'), borderWidth:1, borderDash:[2,3], fill:'-1', _band:'hi'});
-    datasets.push({...common, label:s.label+' 預估', data:pick('mid'), borderWidth:2, borderDash:[5,4], pointRadius:2, pointHoverRadius:5,
-      _band:'mid', _raw:s.fc.mid.slice(P.firstIdx), _pct:s.fcp.mid.slice(P.firstIdx), _lo:s.fc.lo.slice(P.firstIdx), _hi:s.fc.hi.slice(P.firstIdx), _plo:s.fcp.lo.slice(P.firstIdx), _phi:s.fcp.hi.slice(P.firstIdx)});
-  });
-  const nowLine = {id:'nowLine', afterDraw(c){
-    const x=c.scales.x.getPixelForValue(labels.indexOf(DATA.lastActual)); const a=c.chartArea; const g=c.ctx;
-    g.save(); g.strokeStyle=muted; g.setLineDash([3,3]); g.beginPath(); g.moveTo(x,a.top); g.lineTo(x,a.bottom); g.stroke();
-    g.setLineDash([]); g.fillStyle=muted; g.font='12px -apple-system,sans-serif'; g.textAlign='left'; g.fillText('預估 →', x+6, a.top+12);
-    g.textAlign='right'; g.fillText('← 實際', x-6, a.top+12); g.restore(); }};
-  const unit = P.view.unit;
-  const cfg = {type:'line', data:{labels, datasets}, plugins:[nowLine], options:{
-    responsive:true, maintainAspectRatio:false, animation:false,
-    interaction:{mode:'index', intersect:false},
-    plugins:{legend:{display:false}, tooltip:{
-      itemSort:(a,b)=>(b.parsed.y??-1e9)-(a.parsed.y??-1e9),
-      filter:i=>i.parsed.y!=null && (!i.dataset._fc || (i.dataset._band==='mid' && i.dataIndex>labels.indexOf(DATA.lastActual))),
-      callbacks:{
-        title:items=>qLabel(items[0].label)+'（對比 '+qLabel(state.base)+'）',
-        label:c=>{
-          const i=c.dataIndex, raw=c.dataset._raw[i], pct=c.dataset._pct[i];
-          if(c.dataset._fc){
-            let t=c.dataset.label+'：'+fmtRaw(c.dataset._lo[i],unit)+' 到 '+fmtRaw(c.dataset._hi[i],unit);
-            if(pct!=null) t+='（'+fmtPct(c.dataset._plo[i])+' 到 '+fmtPct(c.dataset._phi[i])+'）';
-            return t;
-          }
-          let t=c.dataset.label+'：'+fmtRaw(raw,unit);
-          if(pct!=null) t+='，'+fmtPct(pct);
-          return t;
-        }}}},
-    scales:{
-      x:{ticks:{color:muted, autoSkip:false, maxRotation:0,
-          callback:function(v){const q=this.getLabelForValue(v); return q.endsWith('Q1')?q.slice(0,4):'';}},
-         grid:{display:false}},
-      y:{ticks:{color:muted, callback:v=> state.mode==='pct' ? (v>0?'+':'')+v+'%' : (unit==='eur'?'€'+v.toLocaleString('en-US'):v)},
-         grid:{color:ctx=> (state.mode==='pct' && ctx.tick.value===0) ? muted : line}}
-    }}};
-  if(chart) chart.destroy();
-  chart = new Chart(document.getElementById('c'), cfg);
-
-  document.getElementById('legend').innerHTML = P.series.map(s=>
-    `<button data-id="${s.id}" class="${state.hidden[s.id]?'off':''}" aria-pressed="${!state.hidden[s.id]}"><span class="sw" style="background:${s.home?css('--home'):s.color}"></span>${s.label}</button>`).join('');
-
-  const last = LI;
-  document.getElementById('th-base').textContent = state.base.replace('Q',' Q');
-  document.getElementById('th-last').textContent = Q[last].replace('Q',' Q');
-  const rows = P.series.filter(s=>!state.hidden[s.id] && s.b!=null && s.vals[last]!=null)
-    .map(s=>({s, chg:(s.vals[last]/s.b-1)*100})).sort((a,b)=>b.chg-a.chg);
-  document.getElementById('tb').innerHTML = rows.map(({s,chg})=>
-    `<tr class="${s.home?'home':''}"><td>${s.label}</td><td>${fmtRaw(s.b,unit)}</td><td>${fmtRaw(s.vals[last],unit)}</td><td class="${chg>=0?'up':'down'}">${fmtPct(chg)}</td></tr>`).join('');
-
-  const A=DATA.homeArea, now=P.view.series.find(s=>s.home && s.id==='home');
-  const keyEl=document.getElementById('key');
-  if(state.view==='m2' && now){
-    const cur=now.values[LI]*A, lo=DATA.homeEnd.lo*A, hi=DATA.homeEnd.hi*A;
-    keyEl.textContent='我家到 2028 年底預估 '+wan(lo)+' 到 '+wan(hi)+'（現在 '+wan(cur)+'）。再等兩年的輸贏：少 '+wan(cur-lo)+' 到多 '+wan(hi-cur)+'。等不到大漲，也不太會大跌。';
-  } else { keyEl.textContent='全荷蘭 2027 年銀行預估漲 1% 到 3.5%。阿姆斯特丹預估持平，2028 年才可能小漲。'; }
-  const fcNote=' 虛線和淡色區塊是到 2028 年底的預估範圍。全荷蘭用銀行預測（ABN AMRO、Rabobank、ING、荷蘭央行，2026 年 6 月到 10 月發布）。沒有銀行針對阿姆斯特丹做預測，阿姆斯特丹和我家的範圍是依這些報告做的判斷，不是保證。';
-  document.getElementById('note').innerHTML = (state.view==='m2'
-    ? '資料：NVM 與 MVA 季報，公寓成交中位價每平方公尺，只算中古屋。小區每季成交件數少，單季會跳，看趨勢比較準。「我家」只有兩個點：買入價與 2026 年銀行估價，換算成每平方公尺。實際數字更新到 '+qLabel(Q[last])+'。'
-    : '資料：荷蘭統計局 CBS 既有住宅價格指數（2020 年 = 100），所有房型。區域是 CBS 的統計區，不是單一城市。實際數字更新到 '+qLabel(Q[last])+'。') + fcNote;
-}
-
-document.getElementById('legend').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b) return;
-  state.hidden[b.dataset.id]=!state.hidden[b.dataset.id]; render();
-});
-function seg(a,b,key,va,vb){
-  const A=document.getElementById(a), B=document.getElementById(b);
-  const set=v=>{state[key]=v; A.setAttribute('aria-pressed',v===va); B.setAttribute('aria-pressed',v===vb); render();};
-  A.onclick=()=>set(va); B.onclick=()=>set(vb);
-}
-seg('v-m2','v-cbs','view','m2','cbs');
-seg('m-pct','m-raw','mode','pct','raw');
-document.getElementById('base').onchange=e=>{state.base=e.target.value; render();};
-document.getElementById('smooth').onchange=e=>{state.smooth=e.target.checked; render();};
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
-render();
-</script>
+<!-- 資料由 build.py 從 data/series.json 產生後嵌入 -->
+<script type="application/json" id="housing-data">/*DATA*/</script>
+<!-- 程式碼由 build.py 從 src/ 嵌入：資料取得、資料轉換、畫面渲染 -->
+<script>/*INLINE:src/data.js*/</script>
+<script>/*INLINE:src/transform.js*/</script>
+<script>/*INLINE:src/render.js*/</script>
 </body>
 </html>

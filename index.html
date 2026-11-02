@@ -5,38 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>阿姆斯特丹房價線圖</title>
 <style>
-:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;--home:#0b0b0b}
-@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec}}
+/* 色彩：--muted 淺色模式由 #898781 加深到 #706f6a，文字對比 4.9:1，符合 WCAG AA */
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#706f6a;--line:#e1e0d9;--home:#0b0b0b;--focus:#0b0b0b}
+@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--home:#f0efec;--focus:#f0efec}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif}
 main{max-width:920px;margin:0 auto;padding:28px 16px 56px}
 h1{font-size:22px;font-weight:600;margin:0 0 4px}
 p.sub{margin:0 0 20px;color:var(--ink2);font-size:14px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:0 0 14px;font-size:14px;color:var(--ink2)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{appearance:none;border:0;background:transparent;color:var(--ink2);font:inherit;padding:6px 12px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.seg button:focus-visible{outline-offset:-3px}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;max-width:100%}
 label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:13px;color:var(--ink)}
-.legend button{appearance:none;border:1px solid var(--ink2);background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:4px 10px;border-radius:999px}
+.legend button{appearance:none;border:1px solid var(--ink2);background:transparent;font:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:4px 10px;border-radius:999px;min-height:30px}
 .legend button.off{border-color:var(--line);color:var(--muted)}
 .legend button.off .sw{opacity:.3}
 .hint{font-size:13px;color:var(--muted);margin:0 0 6px}
-.sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+.sw{width:14px;height:3px;border-radius:2px;display:inline-block;flex:none}
 .chart{position:relative;height:420px}
-table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;font-variant-numeric:tabular-nums}
+.chart canvas{max-width:100%}
+/* 圖表區的載入中、錯誤、空狀態訊息，蓋在圖上 */
+.chart-status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin:0;padding:16px;text-align:center;font-size:14px;color:var(--ink2);pointer-events:none}
+.chart-status[hidden]{display:none}
+.chart-status[data-kind="loading"],.chart-status[data-kind="error"]{background:var(--bg);border:1px dashed var(--line);border-radius:8px}
+.chart-status[data-kind="error"]{color:var(--ink)}
+.chart-status button{pointer-events:auto;appearance:none;font:inherit;color:var(--bg);background:var(--ink);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
+.table-wrap{overflow-x:auto;margin-top:22px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
-th{font-weight:500;color:var(--muted)}
-tr.home td{font-weight:600}
+thead th{font-weight:500;color:var(--muted)}
+tbody th{font-weight:400;color:inherit}
+tr.home th,tr.home td{font-weight:600}
+.asof{font-size:12px;font-weight:400;color:var(--muted)}
+@media (max-width:560px){.asof{display:block}}
+.table-empty{margin:8px 0 0;font-size:14px;color:var(--muted)}
 .up{color:#0a7d3c}.down{color:#c0392b}
 @media (prefers-color-scheme: dark){.up{color:#4cc38a}.down{color:#f08a7c}}
 .key{margin:14px 0 0;color:#c0392b;font-weight:600;font-size:15px}
+.key:empty{display:none}
 @media (prefers-color-scheme: dark){.key{color:#f08a7c}}
 .note{margin-top:20px;color:var(--muted);font-size:13px}
 .note a{color:inherit}
-@media (max-width:560px){.chart{height:340px}}
+.fatal{margin:24px 0;padding:16px;border:1px solid #c0392b;border-radius:8px;color:var(--ink)}
+.fatal[hidden]{display:none}
+.fatal p{margin:0}
+body.is-fatal .app{display:none}
+@media (max-width:560px){.chart{height:340px}.controls{gap:10px 16px}}
 </style>
 </head>
 <body>
@@ -44,173 +65,729 @@ tr.home td{font-weight:600}
 <h1>阿姆斯特丹房價線圖</h1>
 <p class="sub">每一季一個點。滑鼠移上去，看每一區從基準季到那一季漲了多少。</p>
 
+<div class="fatal" id="fatal" role="alert" hidden><p data-msg></p></div>
+
+<!-- 沒有 JavaScript 時的提示 -->
+<noscript><p class="fatal">這個頁面需要開啟 JavaScript 才能顯示圖表與表格。</p></noscript>
+
+<div class="app">
 <div class="controls">
   <div class="seg" role="group" aria-label="資料">
-    <button id="v-m2" aria-pressed="true">各區公寓每 m²</button>
-    <button id="v-cbs" aria-pressed="false">各地房價指數</button>
+    <button type="button" id="v-m2" aria-pressed="true">各區公寓每 m²</button>
+    <button type="button" id="v-cbs" aria-pressed="false">各地房價指數</button>
   </div>
   <div class="seg" role="group" aria-label="顯示">
-    <button id="m-pct" aria-pressed="true">漲幅 %</button>
-    <button id="m-raw" aria-pressed="false">原始數字</button>
+    <button type="button" id="m-pct" aria-pressed="true">漲幅 %</button>
+    <button type="button" id="m-raw" aria-pressed="false">原始數字</button>
   </div>
-  <span>基準季 <select id="base" aria-label="基準季"></select></span>
+  <label for="base">基準季 <select id="base"></select></label>
   <label><input type="checkbox" id="smooth"> 平滑（四季平均）</label>
 </div>
 
-<p class="hint">點一下加入或拿掉一條線</p>
-<div class="legend" id="legend"></div>
-<div class="chart"><canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖，含到 2028 年底的預估"></canvas></div>
+<p class="hint" id="legend-hint">點一下加入或拿掉一條線</p>
+<div class="legend" id="legend" role="group" aria-labelledby="legend-hint"></div>
+<div class="chart">
+  <canvas id="c" role="img" aria-label="阿姆斯特丹各區房價逐季線圖，含到 2028 年底的預估"></canvas>
+  <div class="chart-status" id="chart-status" role="status" data-kind="loading">
+    <p data-msg style="margin:0">圖表載入中…</p>
+    <button type="button" id="chart-retry" hidden>重新載入圖表</button>
+  </div>
+</div>
 <p class="key" id="key"></p>
 
-<table aria-label="各區漲幅">
-  <thead><tr><th>地區</th><th id="th-base">基準季</th><th id="th-last">最新</th><th>漲幅</th></tr></thead>
+<div class="table-wrap">
+<table>
+  <caption class="sr-only">各線從基準季到最新一季的漲幅，由高到低</caption>
+  <thead><tr><th scope="col">地區</th><th scope="col" id="th-base">基準季</th><th scope="col" id="th-last">最新</th><th scope="col">漲幅</th></tr></thead>
   <tbody id="tb"></tbody>
 </table>
+</div>
+<p class="table-empty" id="table-empty" hidden>目前沒有可比較的線。請在上方選一條有基準季數字的線。</p>
 
 <p class="note" id="note"></p>
+</div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-const DATA = {"quarters":["2016Q1","2016Q2","2016Q3","2016Q4","2017Q1","2017Q2","2017Q3","2017Q4","2018Q1","2018Q2","2018Q3","2018Q4","2019Q1","2019Q2","2019Q3","2019Q4","2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2","2026Q3","2026Q4","2027Q1","2027Q2","2027Q3","2027Q4","2028Q1","2028Q2","2028Q3","2028Q4"],"lastActual":"2026Q3","homeArea":47,"generated":"2026-10-22","homeEnd":{"lo":7787.0,"mid":8318.0,"hi":8610.6},"views":{"m2":{"unit":"eur","series":[{"id":"home","label":"我家","color":"#0b0b0b","home":true,"values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7894,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,null,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8193.0,8109.8,8027.4,7945.9,7905.9,7866.1,7826.4,7787.0],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8266.6,8256.3,8245.9,8235.6,8256.1,8276.7,8297.3,8318.0],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8297.6,8318.3,8339.0,8359.8,8421.8,8484.2,8547.2,8610.6]}},{"id":"neighbour","label":"同棟鄰居成交","color":"#52514e","home":true,"values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7946,null,null,null,null,null,null,null,null,null,null,null]},{"id":"nvm_zuid_m2","label":"南區 Zuid","color":"#2a78d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7518.0,8194.0,8332.0,8565.0,8733.0,9275.0,8686.0,8314.0,8025.0,8230.0,8607.0,8726.0,8775.0,9471.0,9377.0,9391.0,8971.0,9425.0,9406.0,9529.0,9321.0,9657.0,9360.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_centrum_m2","label":"市中心 Centrum","color":"#6250d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7732.0,8028.0,8442.0,8784.0,8635.0,9084.0,8949.0,8654.0,8314.0,8678.0,8772.0,9190.0,9086.0,9512.0,9626.0,9659.0,9290.0,9949.0,9568.0,9667.0,9429.0,9728.0,9678.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_west_m2","label":"西區 West","color":"#e87ba4","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7458.0,8146.0,8295.0,8489.0,8699.0,8977.0,8284.0,8165.0,7871.0,8115.0,8362.0,8680.0,8801.0,9314.0,9314.0,9430.0,9209.0,9514.0,9300.0,9352.0,9258.0,9661.0,9473.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_oost_m2","label":"東區 Oost","color":"#1baf7a","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6776.0,7328.0,7613.0,7662.0,7953.0,8254.0,7870.0,7484.0,7067.0,7438.0,7832.0,7960.0,8150.0,8603.0,8357.0,8720.0,8617.0,8882.0,8915.0,8732.0,8623.0,8994.0,8796.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_noord_m2","label":"北區 Noord","color":"#eb6834","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,5163.0,5209.0,5295.0,5590.0,5718.0,6174.0,5810.0,5268.0,5289.0,5309.0,5262.0,5992.0,6396.0,6235.0,6276.0,6270.0,6170.0,6806.0,6685.0,6858.0,6621.0,6656.0,6898.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_nieuw_west_m2","label":"新西區 Nieuw-West","color":"#eda100","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4809.0,4849.0,5051.0,5309.0,5373.0,5756.0,5506.0,5294.0,5157.0,5132.0,5470.0,5754.0,5812.0,5896.0,5876.0,6230.0,6074.0,6415.0,6553.0,6096.0,5823.0,6031.0,6386.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_zuidoost_m2","label":"東南區 Zuidoost","color":"#008300","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3635.0,3801.0,4162.0,4084.0,4650.0,4517.0,4837.0,4120.0,4234.0,4168.0,4215.0,4390.0,4520.0,4411.0,4711.0,5019.0,4717.0,4740.0,4805.0,4941.0,4808.0,4662.0,4706.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_city_m2","label":"全市","color":"#898781","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6855.0,7388.0,7568.0,7767.0,7667.0,8310.0,7831.0,7544.0,7201.0,7462.0,7794.0,7994.0,8166.0,8545.0,8486.0,8678.0,8329.0,8779.0,8665.0,8710.0,8581.0,8799.0,8714.0,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8692.2,8626.2,8560.8,8495.9,8431.4,8410.3,8389.2,8368.1,8347.1],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8722.7,8733.6,8744.5,8755.4,8766.3,8809.8,8853.6,8897.5,8941.6],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8757.5,8800.9,8844.6,8888.5,8932.6,9020.6,9109.5,9199.3,9289.9]}}]},"cbs":{"unit":"index","series":[{"id":"cbs_amsterdam","label":"阿姆斯特丹","color":"#2a78d6","values":[66.4,69.4,71.8,73.4,76.7,78.7,81.8,83.2,85.9,89.3,92.5,93.6,93.8,95.4,96,96.7,98.1,100.5,101.3,100.1,104,108,116.4,117.7,123.4,126.5,126.3,119,116.5,115,119.1,120,122.6,126.9,131.1,130.8,130.4,132.4,134.1,132.9,132.9,133.5,135.4,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,135.1,134.0,133.0,132.0,131.0,130.7,130.4,130.0,129.7],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,135.5,135.7,135.9,136.0,136.2,136.9,137.6,138.3,138.9],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,136.1,136.8,137.4,138.1,138.8,140.2,141.5,142.9,144.3]}},{"id":"cbs_groot_amsterdam","label":"大阿姆斯特丹","color":"#6250d6","values":[67.3,69.4,72.1,73.3,76.2,78.1,81.3,82.4,85.5,88.2,91.4,92.6,93.4,94.9,95.7,96.3,97.9,100.1,101.2,100.9,104.6,109,117,119,123.9,127.8,127.5,121.4,118.7,117,120.1,121.1,124.5,128.9,133,133.2,133.3,135.2,137.1,136.3,136.5,137.2,139,null,null,null,null,null,null,null,null,null]},{"id":"cbs_haarlem_agglo","label":"哈倫一帶","color":"#e87ba4","values":[67.4,68,71.3,73.4,74.5,77.7,79.1,80.5,84.8,86.5,90.7,91.9,91.5,92.9,95.2,96,97.3,97.8,101.3,103.6,107.4,111.9,121.3,124.3,130.4,133.8,131.9,126.7,123.3,119.9,121.6,123.8,126.4,130.1,134.1,135.5,137.8,140.7,141.4,141.8,142.7,143.7,143.6,null,null,null,null,null,null,null,null,null]},{"id":"cbs_zaanstreek","label":"Zaanstad 一帶","color":"#1baf7a","values":[65.1,65.6,68.5,70.4,72.7,74.7,77.8,78.9,82.7,83.4,86.5,88.3,90.5,91.4,93.2,95.3,96.7,97.6,102.7,103.1,107.4,112.7,119.5,123.7,130.9,129.9,134,128.1,123.8,120.4,121.5,127.3,130.1,135,139.8,141.9,143.6,143.6,147,146.5,147.7,146.5,148.9,null,null,null,null,null,null,null,null,null]},{"id":"cbs_flevoland","label":"Almere 一帶","color":"#eda100","values":[67.3,67.8,69.6,70.9,72,73.6,75.7,78.2,79.8,82.3,84.6,87.1,88.6,90,92.5,93.1,95.5,98.8,101,104.7,108.4,115.1,122.9,129.1,135.4,139.7,139.3,134.7,132.7,130.6,132.9,136.1,139.5,144.2,148.9,151.6,154.6,156.5,158.5,160.2,160.4,161.5,162.3,null,null,null,null,null,null,null,null,null]},{"id":"cbs_utrecht","label":"烏特勒支","color":"#008300","values":[64.5,65.9,68.3,70.2,72.5,74.1,76.1,78.3,80.2,82.9,85,86.7,89.2,91,92.2,93.3,96.5,99.1,101.5,102.9,106.2,113,120.7,124.1,128.8,132.9,130.8,122.6,119.3,116.6,120.1,123.3,129.7,136.7,142.3,143.6,148.1,150.9,153.4,151.9,152.9,154.2,156.4,null,null,null,null,null,null,null,null,null]},{"id":"cbs_rotterdam","label":"鹿特丹","color":"#e34948","values":[63.3,64.6,66.9,68.8,70.5,73.3,75.9,78,81,83.8,87.9,88.1,90.8,91.4,92.8,93.8,96.6,98.5,101.1,103.8,105.8,111.2,116.7,122.2,125.9,129.4,129.4,127.2,125.6,123.2,123.3,125.7,128,130.3,134.3,137.4,139.3,141.7,143.4,144,145.8,146.2,147.5,null,null,null,null,null,null,null,null,null]},{"id":"cbs_nl","label":"全荷蘭","color":"#898781","values":[71.5,72.4,74.3,75.2,76.7,78.3,80.4,81.7,83.8,85.5,87.9,89.2,90.7,91.8,93.5,94.8,96.9,98.9,101.1,103.1,106.8,111.6,118.7,123.2,128.2,131.8,132.4,129,126.8,124.7,126.4,128.6,131.6,135.4,140.4,143.3,146,148.7,151.4,152.2,153.6,154.9,156.4,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,156.8,157.2,157.6,158.0,158.4,158.8,159.1,159.5,159.9],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,157.3,158.3,159.3,160.3,161.3,162.5,163.7,164.9,166.1],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,157.8,159.2,160.5,161.9,163.3,164.9,166.6,168.2,169.9]}}]}}};
-const Q = DATA.quarters;
-const LI = Q.indexOf(DATA.lastActual);
-const wan = v => { const w=Math.round(Math.abs(v)/1000)/10; const a=Math.floor(w), b=Math.round((w-a)*10); return '€'+a+' 萬'+(b?' '+b:''); };
-const DEFAULT_ON = {m2:['home','nvm_city_m2'], cbs:['cbs_amsterdam','cbs_nl']};
-const state = {view:'m2', mode:'pct', base:'2022Q2', smooth:false, hidden:{}};
-for(const v in DATA.views) for(const x of DATA.views[v].series) if(!DEFAULT_ON[v].includes(x.id)) state.hidden[x.id]=true;
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const qLabel = q => q.slice(0,4)+' 年第 '+q.slice(5)+' 季';
-const fmtRaw = (v,unit) => unit==='eur' ? '€'+Math.round(v).toLocaleString('en-US') : v.toFixed(1);
-const fmtPct = v => (v>0?'+':'')+v.toFixed(1)+'%';
+<!-- 資料由 build.py 從 data/series.json 產生後嵌入 -->
+<script type="application/json" id="housing-data">{"quarters":["2016Q1","2016Q2","2016Q3","2016Q4","2017Q1","2017Q2","2017Q3","2017Q4","2018Q1","2018Q2","2018Q3","2018Q4","2019Q1","2019Q2","2019Q3","2019Q4","2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2","2026Q3","2026Q4","2027Q1","2027Q2","2027Q3","2027Q4","2028Q1","2028Q2","2028Q3","2028Q4"],"lastActual":"2026Q3","homeArea":47,"generated":"2026-10-22","homeEnd":{"lo":7787.0,"mid":8318.0,"hi":8610.6},"views":{"m2":{"unit":"eur","series":[{"id":"home","label":"我家","color":"#0b0b0b","home":true,"values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7894,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,null,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8193.0,8109.8,8027.4,7945.9,7905.9,7866.1,7826.4,7787.0],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8266.6,8256.3,8245.9,8235.6,8256.1,8276.7,8297.3,8318.0],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8277,8277.0,8277.0,8297.6,8318.3,8339.0,8359.8,8421.8,8484.2,8547.2,8610.6]}},{"id":"neighbour","label":"同棟鄰居成交","color":"#52514e","home":true,"values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7946,null,null,null,null,null,null,null,null,null,null,null]},{"id":"nvm_zuid_m2","label":"南區 Zuid","color":"#2a78d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7518.0,8194.0,8332.0,8565.0,8733.0,9275.0,8686.0,8314.0,8025.0,8230.0,8607.0,8726.0,8775.0,9471.0,9377.0,9391.0,8971.0,9425.0,9406.0,9529.0,9321.0,9657.0,9360.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_centrum_m2","label":"市中心 Centrum","color":"#6250d6","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7732.0,8028.0,8442.0,8784.0,8635.0,9084.0,8949.0,8654.0,8314.0,8678.0,8772.0,9190.0,9086.0,9512.0,9626.0,9659.0,9290.0,9949.0,9568.0,9667.0,9429.0,9728.0,9678.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_west_m2","label":"西區 West","color":"#e87ba4","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7458.0,8146.0,8295.0,8489.0,8699.0,8977.0,8284.0,8165.0,7871.0,8115.0,8362.0,8680.0,8801.0,9314.0,9314.0,9430.0,9209.0,9514.0,9300.0,9352.0,9258.0,9661.0,9473.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_oost_m2","label":"東區 Oost","color":"#1baf7a","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6776.0,7328.0,7613.0,7662.0,7953.0,8254.0,7870.0,7484.0,7067.0,7438.0,7832.0,7960.0,8150.0,8603.0,8357.0,8720.0,8617.0,8882.0,8915.0,8732.0,8623.0,8994.0,8796.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_noord_m2","label":"北區 Noord","color":"#eb6834","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,5163.0,5209.0,5295.0,5590.0,5718.0,6174.0,5810.0,5268.0,5289.0,5309.0,5262.0,5992.0,6396.0,6235.0,6276.0,6270.0,6170.0,6806.0,6685.0,6858.0,6621.0,6656.0,6898.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_nieuw_west_m2","label":"新西區 Nieuw-West","color":"#eda100","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4809.0,4849.0,5051.0,5309.0,5373.0,5756.0,5506.0,5294.0,5157.0,5132.0,5470.0,5754.0,5812.0,5896.0,5876.0,6230.0,6074.0,6415.0,6553.0,6096.0,5823.0,6031.0,6386.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_zuidoost_m2","label":"東南區 Zuidoost","color":"#008300","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3635.0,3801.0,4162.0,4084.0,4650.0,4517.0,4837.0,4120.0,4234.0,4168.0,4215.0,4390.0,4520.0,4411.0,4711.0,5019.0,4717.0,4740.0,4805.0,4941.0,4808.0,4662.0,4706.0,null,null,null,null,null,null,null,null,null]},{"id":"nvm_city_m2","label":"全市","color":"#898781","values":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,6855.0,7388.0,7568.0,7767.0,7667.0,8310.0,7831.0,7544.0,7201.0,7462.0,7794.0,7994.0,8166.0,8545.0,8486.0,8678.0,8329.0,8779.0,8665.0,8710.0,8581.0,8799.0,8714.0,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8692.2,8626.2,8560.8,8495.9,8431.4,8410.3,8389.2,8368.1,8347.1],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8722.7,8733.6,8744.5,8755.4,8766.3,8809.8,8853.6,8897.5,8941.6],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8714.0,8757.5,8800.9,8844.6,8888.5,8932.6,9020.6,9109.5,9199.3,9289.9]}}]},"cbs":{"unit":"index","series":[{"id":"cbs_amsterdam","label":"阿姆斯特丹","color":"#2a78d6","values":[66.4,69.4,71.8,73.4,76.7,78.7,81.8,83.2,85.9,89.3,92.5,93.6,93.8,95.4,96,96.7,98.1,100.5,101.3,100.1,104,108,116.4,117.7,123.4,126.5,126.3,119,116.5,115,119.1,120,122.6,126.9,131.1,130.8,130.4,132.4,134.1,132.9,132.9,133.5,135.4,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,135.1,134.0,133.0,132.0,131.0,130.7,130.4,130.0,129.7],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,135.5,135.7,135.9,136.0,136.2,136.9,137.6,138.3,138.9],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,135.4,136.1,136.8,137.4,138.1,138.8,140.2,141.5,142.9,144.3]}},{"id":"cbs_groot_amsterdam","label":"大阿姆斯特丹","color":"#6250d6","values":[67.3,69.4,72.1,73.3,76.2,78.1,81.3,82.4,85.5,88.2,91.4,92.6,93.4,94.9,95.7,96.3,97.9,100.1,101.2,100.9,104.6,109,117,119,123.9,127.8,127.5,121.4,118.7,117,120.1,121.1,124.5,128.9,133,133.2,133.3,135.2,137.1,136.3,136.5,137.2,139,null,null,null,null,null,null,null,null,null]},{"id":"cbs_haarlem_agglo","label":"哈倫一帶","color":"#e87ba4","values":[67.4,68,71.3,73.4,74.5,77.7,79.1,80.5,84.8,86.5,90.7,91.9,91.5,92.9,95.2,96,97.3,97.8,101.3,103.6,107.4,111.9,121.3,124.3,130.4,133.8,131.9,126.7,123.3,119.9,121.6,123.8,126.4,130.1,134.1,135.5,137.8,140.7,141.4,141.8,142.7,143.7,143.6,null,null,null,null,null,null,null,null,null]},{"id":"cbs_zaanstreek","label":"Zaanstad 一帶","color":"#1baf7a","values":[65.1,65.6,68.5,70.4,72.7,74.7,77.8,78.9,82.7,83.4,86.5,88.3,90.5,91.4,93.2,95.3,96.7,97.6,102.7,103.1,107.4,112.7,119.5,123.7,130.9,129.9,134,128.1,123.8,120.4,121.5,127.3,130.1,135,139.8,141.9,143.6,143.6,147,146.5,147.7,146.5,148.9,null,null,null,null,null,null,null,null,null]},{"id":"cbs_flevoland","label":"Almere 一帶","color":"#eda100","values":[67.3,67.8,69.6,70.9,72,73.6,75.7,78.2,79.8,82.3,84.6,87.1,88.6,90,92.5,93.1,95.5,98.8,101,104.7,108.4,115.1,122.9,129.1,135.4,139.7,139.3,134.7,132.7,130.6,132.9,136.1,139.5,144.2,148.9,151.6,154.6,156.5,158.5,160.2,160.4,161.5,162.3,null,null,null,null,null,null,null,null,null]},{"id":"cbs_utrecht","label":"烏特勒支","color":"#008300","values":[64.5,65.9,68.3,70.2,72.5,74.1,76.1,78.3,80.2,82.9,85,86.7,89.2,91,92.2,93.3,96.5,99.1,101.5,102.9,106.2,113,120.7,124.1,128.8,132.9,130.8,122.6,119.3,116.6,120.1,123.3,129.7,136.7,142.3,143.6,148.1,150.9,153.4,151.9,152.9,154.2,156.4,null,null,null,null,null,null,null,null,null]},{"id":"cbs_rotterdam","label":"鹿特丹","color":"#e34948","values":[63.3,64.6,66.9,68.8,70.5,73.3,75.9,78,81,83.8,87.9,88.1,90.8,91.4,92.8,93.8,96.6,98.5,101.1,103.8,105.8,111.2,116.7,122.2,125.9,129.4,129.4,127.2,125.6,123.2,123.3,125.7,128,130.3,134.3,137.4,139.3,141.7,143.4,144,145.8,146.2,147.5,null,null,null,null,null,null,null,null,null]},{"id":"cbs_nl","label":"全荷蘭","color":"#898781","values":[71.5,72.4,74.3,75.2,76.7,78.3,80.4,81.7,83.8,85.5,87.9,89.2,90.7,91.8,93.5,94.8,96.9,98.9,101.1,103.1,106.8,111.6,118.7,123.2,128.2,131.8,132.4,129,126.8,124.7,126.4,128.6,131.6,135.4,140.4,143.3,146,148.7,151.4,152.2,153.6,154.9,156.4,null,null,null,null,null,null,null,null,null],"fc":{"lo":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,156.8,157.2,157.6,158.0,158.4,158.8,159.1,159.5,159.9],"mid":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,157.3,158.3,159.3,160.3,161.3,162.5,163.7,164.9,166.1],"hi":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,156.4,157.8,159.2,160.5,161.9,163.3,164.9,166.6,168.2,169.9]}}]}}}</script>
+<!-- 程式碼由 build.py 從 src/ 嵌入：資料取得、資料轉換、畫面渲染 -->
+<script>/*
+ * 資料取得層：
+ *   1. readEmbeddedData()：讀出 build.py 嵌在頁面裡的 JSON。
+ *   2. validateData()：檢查格式，壞掉的部分丟掉並記下警告，整份不能用時回傳 error。
+ *   3. loadChartLib()：載入 Chart.js，CDN 失敗或逾時就改用 repo 裡的備份檔。
+ * validateData 是純函式，Node 測試可直接 require()。
+ */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.HousingData = api;
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
 
-function smooth(vals){
-  return vals.map((v,i)=>{
-    if(v==null) return null;
-    const w=[]; for(let k=i-3;k<=i;k++){ if(k>=0 && vals[k]!=null) w.push(vals[k]); }
-    return w.length<4 ? null : w.reduce((a,b)=>a+b,0)/4;
-  });
-}
-function prepared(){
-  const view = DATA.views[state.view];
-  const firstIdx = Math.min(...view.series.filter(s=>!s.home).map(s=>s.values.findIndex(v=>v!=null)));
-  const bi = Q.indexOf(state.base);
-  return {view, firstIdx, bi, series: view.series.map(s=>{
-    const vals = (state.smooth && !s.home) ? smooth(s.values) : s.values;
-    const b = vals[bi];
-    const pct = vals.map(v => (v==null || b==null) ? null : (v/b-1)*100);
-    const toPct = arr => arr.map(v => (v==null || b==null) ? null : (v/b-1)*100);
-    const fcp = s.fc ? {lo:toPct(s.fc.lo), mid:toPct(s.fc.mid), hi:toPct(s.fc.hi)} : null;
-    return {...s, vals, pct, b, fcp};
-  })};
-}
-function availableBases(){
-  const view = DATA.views[state.view];
-  const ref = view.series.find(s=>!s.home).values;
-  return Q.filter((q,i)=>i<=LI && ref[i]!=null && (!state.smooth || i - ref.findIndex(v=>v!=null) >= 3));
-}
+  const QUARTER_RE = /^\d{4}Q[1-4]$/;
+  const COLOR_RE = /^#[0-9a-fA-F]{6}$/;
+  const FALLBACK_COLOR = '#898781';
+  const VIEW_IDS = ['m2', 'cbs'];
 
-let chart;
-function render(){
-  const bases = availableBases();
-  if(!bases.includes(state.base)) state.base = bases.includes('2022Q2') ? '2022Q2' : bases[0];
-  const sel = document.getElementById('base');
-  sel.innerHTML = bases.map(q=>`<option value="${q}"${q===state.base?' selected':''}>${qLabel(q)}${q==='2022Q2'?'（我買房那季）':''}</option>`).join('');
+  /** 數字或 null 以外的值一律當缺值 */
+  const cleanValue = v => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 
-  const P = prepared();
-  const labels = Q.slice(P.firstIdx);
-  const ink = css('--ink'), muted = css('--muted'), line = css('--line');
-  const datasets = P.series.map(s=>{
-    const arr = (state.mode==='pct' ? s.pct : s.vals).slice(P.firstIdx);
-    const color = s.home ? css('--home') : s.color;
-    return {label:s.label, data:arr, _raw:s.vals.slice(P.firstIdx), _pct:s.pct.slice(P.firstIdx),
-      borderColor:color, backgroundColor:color, borderWidth:s.home?3:2, borderDash:s.home?[6,4]:[],
-      pointRadius:s.home?5:2.5, pointHoverRadius:s.home?7:5, pointStyle:s.home?'rectRot':'circle',
-      spanGaps:!!s.home, tension:0, hidden:!!state.hidden[s.id], _id:s.id, _home:!!s.home};
-  });
-  P.series.forEach(s=>{
-    if(!s.fc || state.hidden[s.id]) return;
-    const color = s.home ? css('--home') : s.color;
-    const pick = k => (state.mode==='pct' ? s.fcp[k] : s.fc[k]).slice(P.firstIdx);
-    const common = {borderColor:color, backgroundColor:color+'22', pointRadius:0, pointHoverRadius:0, tension:0, _fc:true, _id:s.id};
-    datasets.push({...common, label:s.label+' 預估低', data:pick('lo'), borderWidth:1, borderDash:[2,3], fill:false, _band:'lo'});
-    datasets.push({...common, label:s.label+' 預估高', data:pick('hi'), borderWidth:1, borderDash:[2,3], fill:'-1', _band:'hi'});
-    datasets.push({...common, label:s.label+' 預估', data:pick('mid'), borderWidth:2, borderDash:[5,4], pointRadius:2, pointHoverRadius:5,
-      _band:'mid', _raw:s.fc.mid.slice(P.firstIdx), _pct:s.fcp.mid.slice(P.firstIdx), _lo:s.fc.lo.slice(P.firstIdx), _hi:s.fc.hi.slice(P.firstIdx), _plo:s.fcp.lo.slice(P.firstIdx), _phi:s.fcp.hi.slice(P.firstIdx)});
-  });
-  const nowLine = {id:'nowLine', afterDraw(c){
-    const x=c.scales.x.getPixelForValue(labels.indexOf(DATA.lastActual)); const a=c.chartArea; const g=c.ctx;
-    g.save(); g.strokeStyle=muted; g.setLineDash([3,3]); g.beginPath(); g.moveTo(x,a.top); g.lineTo(x,a.bottom); g.stroke();
-    g.setLineDash([]); g.fillStyle=muted; g.font='12px -apple-system,sans-serif'; g.textAlign='left'; g.fillText('預估 →', x+6, a.top+12);
-    g.textAlign='right'; g.fillText('← 實際', x-6, a.top+12); g.restore(); }};
-  const unit = P.view.unit;
-  const cfg = {type:'line', data:{labels, datasets}, plugins:[nowLine], options:{
-    responsive:true, maintainAspectRatio:false, animation:false,
-    interaction:{mode:'index', intersect:false},
-    plugins:{legend:{display:false}, tooltip:{
-      itemSort:(a,b)=>(b.parsed.y??-1e9)-(a.parsed.y??-1e9),
-      filter:i=>i.parsed.y!=null && (!i.dataset._fc || (i.dataset._band==='mid' && i.dataIndex>labels.indexOf(DATA.lastActual))),
-      callbacks:{
-        title:items=>qLabel(items[0].label)+'（對比 '+qLabel(state.base)+'）',
-        label:c=>{
-          const i=c.dataIndex, raw=c.dataset._raw[i], pct=c.dataset._pct[i];
-          if(c.dataset._fc){
-            let t=c.dataset.label+'：'+fmtRaw(c.dataset._lo[i],unit)+' 到 '+fmtRaw(c.dataset._hi[i],unit);
-            if(pct!=null) t+='（'+fmtPct(c.dataset._plo[i])+' 到 '+fmtPct(c.dataset._phi[i])+'）';
-            return t;
-          }
-          let t=c.dataset.label+'：'+fmtRaw(raw,unit);
-          if(pct!=null) t+='，'+fmtPct(pct);
-          return t;
-        }}}},
-    scales:{
-      x:{ticks:{color:muted, autoSkip:false, maxRotation:0,
-          callback:function(v){const q=this.getLabelForValue(v); return q.endsWith('Q1')?q.slice(0,4):'';}},
-         grid:{display:false}},
-      y:{ticks:{color:muted, callback:v=> state.mode==='pct' ? (v>0?'+':'')+v+'%' : (unit==='eur'?'€'+v.toLocaleString('en-US'):v)},
-         grid:{color:ctx=> (state.mode==='pct' && ctx.tick.value===0) ? muted : line}}
-    }}};
-  if(chart) chart.destroy();
-  chart = new Chart(document.getElementById('c'), cfg);
+  /**
+   * 把陣列整理成跟 quarters 一樣長：太短補 null、太長截掉、非數字變 null。
+   * 回傳 { values, changed }，changed 表示有做過修正。
+   */
+  function normalizeValues(arr, length) {
+    if (!Array.isArray(arr)) return null;
+    const values = [];
+    let changed = arr.length !== length;
+    for (let i = 0; i < length; i++) {
+      const raw = i < arr.length ? arr[i] : null;
+      const v = cleanValue(raw);
+      if (v === null && raw != null) changed = true;
+      values.push(v);
+    }
+    return { values, changed };
+  }
 
-  document.getElementById('legend').innerHTML = P.series.map(s=>
-    `<button data-id="${s.id}" class="${state.hidden[s.id]?'off':''}" aria-pressed="${!state.hidden[s.id]}"><span class="sw" style="background:${s.home?css('--home'):s.color}"></span>${s.label}</button>`).join('');
+  function normalizeSeries(s, length, where, warnings) {
+    if (!s || typeof s !== 'object') { warnings.push(where + '：不是物件，略過'); return null; }
+    if (typeof s.id !== 'string' || !s.id) { warnings.push(where + '：缺少 id，略過'); return null; }
+    const name = where + ' ' + s.id;
+    const norm = normalizeValues(s.values, length);
+    if (!norm) { warnings.push(name + '：values 不是陣列，略過'); return null; }
+    if (norm.changed) warnings.push(name + '：values 長度或內容不符，已補齊或清掉非數字');
+    if (norm.values.every(v => v == null)) { warnings.push(name + '：沒有任何數字，略過'); return null; }
 
-  const last = LI;
-  document.getElementById('th-base').textContent = state.base.replace('Q',' Q');
-  document.getElementById('th-last').textContent = Q[last].replace('Q',' Q');
-  const rows = P.series.filter(s=>!state.hidden[s.id] && s.b!=null && s.vals[last]!=null)
-    .map(s=>({s, chg:(s.vals[last]/s.b-1)*100})).sort((a,b)=>b.chg-a.chg);
-  document.getElementById('tb').innerHTML = rows.map(({s,chg})=>
-    `<tr class="${s.home?'home':''}"><td>${s.label}</td><td>${fmtRaw(s.b,unit)}</td><td>${fmtRaw(s.vals[last],unit)}</td><td class="${chg>=0?'up':'down'}">${fmtPct(chg)}</td></tr>`).join('');
+    const out = {
+      id: s.id,
+      label: typeof s.label === 'string' && s.label ? s.label : s.id,
+      color: typeof s.color === 'string' && COLOR_RE.test(s.color) ? s.color : FALLBACK_COLOR,
+      home: !!s.home,
+      values: norm.values,
+    };
+    // 預估區間：lo、mid、hi 三條都要能用才保留，否則只丟掉預估，實際線照畫
+    if (s.fc != null) {
+      const fc = {};
+      const ok = ['lo', 'mid', 'hi'].every(k => {
+        const n = s.fc && normalizeValues(s.fc[k], length);
+        if (n) fc[k] = n.values;
+        return !!n;
+      });
+      if (ok) out.fc = fc;
+      else warnings.push(name + '：預估資料格式不對，只畫實際數字');
+    }
+    return out;
+  }
 
-  const A=DATA.homeArea, now=P.view.series.find(s=>s.home && s.id==='home');
-  const keyEl=document.getElementById('key');
-  if(state.view==='m2' && now){
-    const cur=now.values[LI]*A, lo=DATA.homeEnd.lo*A, hi=DATA.homeEnd.hi*A;
-    keyEl.textContent='我家到 2028 年底預估 '+wan(lo)+' 到 '+wan(hi)+'（現在 '+wan(cur)+'）。再等兩年的輸贏：少 '+wan(cur-lo)+' 到多 '+wan(hi-cur)+'。等不到大漲，也不太會大跌。';
-  } else { keyEl.textContent='全荷蘭 2027 年銀行預估漲 1% 到 3.5%。阿姆斯特丹預估持平，2028 年才可能小漲。'; }
-  const fcNote=' 虛線和淡色區塊是到 2028 年底的預估範圍。全荷蘭用銀行預測（ABN AMRO、Rabobank、ING、荷蘭央行，2026 年 6 月到 10 月發布）。沒有銀行針對阿姆斯特丹做預測，阿姆斯特丹和我家的範圍是依這些報告做的判斷，不是保證。';
-  document.getElementById('note').innerHTML = (state.view==='m2'
-    ? '資料：NVM 與 MVA 季報，公寓成交中位價每平方公尺，只算中古屋。小區每季成交件數少，單季會跳，看趨勢比較準。「我家」只有兩個點：買入價與 2026 年銀行估價，換算成每平方公尺。實際數字更新到 '+qLabel(Q[last])+'。'
-    : '資料：荷蘭統計局 CBS 既有住宅價格指數（2020 年 = 100），所有房型。區域是 CBS 的統計區，不是單一城市。實際數字更新到 '+qLabel(Q[last])+'。') + fcNote;
-}
+  /**
+   * 檢查並整理嵌入資料。
+   * 回傳 { data, warnings }；整份無法使用時回傳 { error, warnings }。
+   */
+  function validateData(raw) {
+    const warnings = [];
+    if (raw == null) return { error: '沒有讀到資料，可能是 JSON 格式錯誤或資料區塊不見了', warnings };
+    if (typeof raw !== 'object' || Array.isArray(raw)) return { error: '資料格式不對，應該是一個物件', warnings };
 
-document.getElementById('legend').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b) return;
-  state.hidden[b.dataset.id]=!state.hidden[b.dataset.id]; render();
+    const quarters = raw.quarters;
+    if (!Array.isArray(quarters) || !quarters.length || !quarters.every(q => typeof q === 'string' && QUARTER_RE.test(q))) {
+      return { error: '季別清單（quarters）缺少或格式不對', warnings };
+    }
+    const n = quarters.length;
+
+    const views = {};
+    const rawViews = raw.views && typeof raw.views === 'object' ? raw.views : {};
+    for (const vid of VIEW_IDS) {
+      const v = rawViews[vid];
+      const list = v && Array.isArray(v.series) ? v.series : [];
+      if (!v) warnings.push('views.' + vid + '：缺少，這個分頁會顯示空狀態');
+      const series = list.map((s, i) => normalizeSeries(s, n, 'views.' + vid + '[' + i + ']', warnings)).filter(Boolean);
+      views[vid] = { unit: v && v.unit === 'eur' ? 'eur' : 'index', series };
+    }
+    if (VIEW_IDS.every(vid => views[vid].series.length === 0)) {
+      return { error: '所有資料組都沒有可用的序列', warnings };
+    }
+
+    // 最新實際季：缺少或不在清單裡時，改用有資料的最後一季
+    let lastActual = raw.lastActual;
+    if (!quarters.includes(lastActual)) {
+      let li = -1;
+      for (const vid of VIEW_IDS) for (const s of views[vid].series) {
+        if (s.home) continue;
+        for (let i = n - 1; i > li; i--) if (s.values[i] != null) { li = i; break; }
+      }
+      lastActual = quarters[Math.max(li, 0)];
+      warnings.push('lastActual 不在季別清單裡，改用 ' + lastActual);
+    }
+
+    const homeArea = typeof raw.homeArea === 'number' && raw.homeArea > 0 ? raw.homeArea : null;
+    const he = raw.homeEnd;
+    const homeEnd = he && cleanValue(he.lo) != null && cleanValue(he.hi) != null ? { lo: he.lo, mid: cleanValue(he.mid), hi: he.hi } : null;
+    if (homeArea == null || homeEnd == null) warnings.push('homeArea 或 homeEnd 缺少，不顯示「我家」重點句');
+
+    return { data: { quarters, lastActual, homeArea, homeEnd, generated: raw.generated || null, views }, warnings };
+  }
+
+  /** 從 <script type="application/json"> 讀資料，JSON 壞掉時回傳 null */
+  function readEmbeddedData(id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch { return null; }
+  }
+
+  /** 動態載入一支 script，逾時或失敗都 reject */
+  function loadScript(src, timeoutMs) {
+    return new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      let done = false;
+      const finish = (ok, why) => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        if (ok) resolve(); else { el.remove(); reject(new Error(why + '：' + src)); }
+      };
+      const timer = setTimeout(() => finish(false, '逾時'), timeoutMs);
+      el.src = src;
+      el.async = true;
+      el.onload = () => finish(true);
+      el.onerror = () => finish(false, '載入失敗');
+      document.head.appendChild(el);
+    });
+  }
+
+  /**
+   * 依序嘗試每個來源，直到 window.Chart 出現。
+   * 預設先用 cdnjs，失敗再用 vendor/ 裡同版本的備份。
+   */
+  async function loadChartLib(sources, timeoutMs = 8000) {
+    if (typeof window !== 'undefined' && window.Chart) return window.Chart;
+    let lastErr = null;
+    for (const src of sources) {
+      try {
+        await loadScript(src, timeoutMs);
+        if (window.Chart) return window.Chart;
+        lastErr = new Error('載入後找不到 Chart：' + src);
+      } catch (e) {
+        lastErr = e;
+        console.warn('[圖表元件]', e.message);
+      }
+    }
+    throw lastErr || new Error('沒有可用的 Chart.js 來源');
+  }
+
+  return { validateData, normalizeValues, readEmbeddedData, loadScript, loadChartLib };
 });
-function seg(a,b,key,va,vb){
-  const A=document.getElementById(a), B=document.getElementById(b);
-  const set=v=>{state[key]=v; A.setAttribute('aria-pressed',v===va); B.setAttribute('aria-pressed',v===vb); render();};
-  A.onclick=()=>set(va); B.onclick=()=>set(vb);
-}
-seg('v-m2','v-cbs','view','m2','cbs');
-seg('m-pct','m-raw','mode','pct','raw');
-document.getElementById('base').onchange=e=>{state.base=e.target.value; render();};
-document.getElementById('smooth').onchange=e=>{state.smooth=e.target.checked; render();};
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
-render();
+</script>
+<script>/*
+ * 資料轉換層：純函式，不碰 DOM，也不依賴 Chart.js。
+ * 瀏覽器裡掛在 window.HousingTransform，Node 測試裡用 require() 取得。
+ */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.HousingTransform = api;
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  // ---------- 格式化 ----------
+
+  /** '2022Q2' 轉成「2022 年第 2 季」 */
+  const qLabel = q => q.slice(0, 4) + ' 年第 ' + q.slice(5) + ' 季';
+
+  /** '2022Q2' 轉成「2022 Q2」，用在表頭等窄欄位 */
+  const qShort = q => q.replace('Q', ' Q');
+
+  /** 歐元用千分位整數，指數保留一位小數 */
+  const fmtRaw = (v, unit) => (unit === 'eur' ? '€' + Math.round(v).toLocaleString('en-US') : v.toFixed(1));
+
+  /** 百分比，正數加上 + 號 */
+  const fmtPct = v => (v > 0 ? '+' : '') + v.toFixed(1) + '%';
+
+  /**
+   * 歐元金額轉成「€38 萬 9」這種口語寫法（解析度一千歐元，取絕對值）。
+   * 先四捨五入到千元再拆萬位，避免 38.95 萬被拆成「38 萬 10」。
+   */
+  function fmtWan(v) {
+    const k = Math.round(Math.abs(v) / 1000);
+    const wan = Math.floor(k / 10);
+    const rest = k % 10;
+    return '€' + wan + ' 萬' + (rest ? ' ' + rest : '');
+  }
+
+  // ---------- 序列運算 ----------
+
+  /** 四季移動平均；窗口內任何一季缺值，那一季就回傳 null */
+  function smoothSeries(vals, size = 4) {
+    return vals.map((v, i) => {
+      if (v == null || i < size - 1) return null;
+      let sum = 0;
+      for (let k = i - size + 1; k <= i; k++) {
+        if (vals[k] == null) return null;
+        sum += vals[k];
+      }
+      return sum / size;
+    });
+  }
+
+  /** 以 base 為 0% 換算漲幅；base 或該點缺值時為 null */
+  function toPct(vals, base) {
+    return vals.map(v => (v == null || base == null || base === 0 ? null : (v / base - 1) * 100));
+  }
+
+  /** 第一個非空值的位置，全空回傳 -1 */
+  const firstIndex = vals => vals.findIndex(v => v != null);
+
+  /** 在 idx 之前（含）最後一個非空值的位置，找不到回傳 -1 */
+  function lastIndexAtOrBefore(vals, idx) {
+    for (let i = Math.min(idx, vals.length - 1); i >= 0; i--) if (vals[i] != null) return i;
+    return -1;
+  }
+
+  /**
+   * 圖表 x 軸從哪一季開始：所有一般序列（非「我家」這類單點序列）最早有資料的那一季。
+   * 全部序列都沒資料時回傳 0，避免 slice(-1) 只剩一個點。
+   */
+  function chartStartIndex(series) {
+    const idx = series.filter(s => !s.home).map(s => firstIndex(s.values)).filter(i => i >= 0);
+    return idx.length ? Math.min(...idx) : 0;
+  }
+
+  /**
+   * 可選的基準季：參考序列有值、不晚於最新實際季，平滑時還要湊滿四季。
+   * 參考序列 = 第一條一般序列（與原本行為相同）。
+   */
+  function availableBases(series, quarters, lastIdx, smooth) {
+    const ref = series.find(s => !s.home);
+    if (!ref) return [];
+    const first = firstIndex(ref.values);
+    return quarters.filter((q, i) => i <= lastIdx && ref.values[i] != null && (!smooth || i - first >= 3));
+  }
+
+  /** 目前的基準季若不可用，改用 preferred，再不行用第一個可用季 */
+  function resolveBase(current, bases, preferred) {
+    if (bases.includes(current)) return current;
+    if (bases.includes(preferred)) return preferred;
+    return bases.length ? bases[0] : null;
+  }
+
+  /**
+   * 把一個 view 的原始序列換算成畫面要的數字：
+   * vals（平滑後或原始）、pct（對基準季漲幅）、b（基準值）、fcp（預估的漲幅版本）。
+   * 「我家」這類 home 序列只有零星幾點，不做平滑。
+   */
+  function prepareSeries(series, quarters, base, smooth) {
+    const bi = quarters.indexOf(base);
+    return series.map(s => {
+      const vals = smooth && !s.home ? smoothSeries(s.values) : s.values;
+      const b = bi >= 0 ? vals[bi] : null;
+      const fcp = s.fc ? { lo: toPct(s.fc.lo, b), mid: toPct(s.fc.mid, b), hi: toPct(s.fc.hi, b) } : null;
+      return Object.assign({}, s, { vals, pct: toPct(vals, b), b, fcp });
+    });
+  }
+
+  /**
+   * 表格列：每條顯示中的線，從基準季到「最新實際季」的漲幅，由高到低。
+   * 有些線（例如「我家」）最新實際季沒有點，改用該季之前最近的一點，並記下是哪一季。
+   */
+  function tableRows(prepared, quarters, lastIdx, hidden) {
+    return prepared
+      .filter(s => !hidden[s.id] && s.b != null)
+      .map(s => {
+        const li = lastIndexAtOrBefore(s.vals, lastIdx);
+        if (li < 0) return null;
+        return { s, base: s.b, latest: s.vals[li], latestQuarter: quarters[li], stale: li !== lastIdx, chg: (s.vals[li] / s.b - 1) * 100 };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.chg - a.chg);
+  }
+
+  /**
+   * 「我家」重點句要用的數字（總價，歐元）。
+   * 現值取最新實際季以前最近的一個點（目前是 2026Q2 銀行估價），不是固定取最新季，
+   * 否則最新季沒有估價時會算成 0。
+   */
+  function homeOutlook(homeSeries, lastIdx, homeEnd, area) {
+    if (!homeSeries || !homeEnd || !(area > 0)) return null;
+    const li = lastIndexAtOrBefore(homeSeries.values, lastIdx);
+    if (li < 0 || homeEnd.lo == null || homeEnd.hi == null) return null;
+    const cur = homeSeries.values[li] * area;
+    return { cur, lo: homeEnd.lo * area, hi: homeEnd.hi * area, index: li };
+  }
+
+  /** 紅字重點句 */
+  function keyMessage(view, outlook) {
+    if (view === 'm2') {
+      if (!outlook) return '';
+      const { cur, lo, hi } = outlook;
+      const loss = cur - lo;
+      const gain = hi - cur;
+      return (
+        '我家到 2028 年底預估 ' + fmtWan(lo) + ' 到 ' + fmtWan(hi) + '（現在 ' + fmtWan(cur) + '）。' +
+        '再等兩年的輸贏：' + (loss >= 0 ? '少 ' : '多 ') + fmtWan(loss) + ' 到 ' + (gain >= 0 ? '多 ' : '少 ') + fmtWan(gain) + '。' +
+        '等不到大漲，也不太會大跌。'
+      );
+    }
+    return '全荷蘭 2027 年銀行預估漲 1% 到 3.5%。阿姆斯特丹預估持平，2028 年才可能小漲。';
+  }
+
+  return {
+    qLabel, qShort, fmtRaw, fmtPct, fmtWan,
+    smoothSeries, toPct, firstIndex, lastIndexAtOrBefore, chartStartIndex,
+    availableBases, resolveBase, prepareSeries, tableRows, homeOutlook, keyMessage,
+  };
+});
+</script>
+<script>/*
+ * 畫面渲染層：讀狀態、呼叫 HousingTransform 算數字、更新 DOM 與 Chart.js。
+ * 依賴 window.HousingData 與 window.HousingTransform（build.py 會把三支檔案依序嵌進 index.html）。
+ */
+(function () {
+  'use strict';
+  const T = window.HousingTransform;
+  const D = window.HousingData;
+
+  const CHART_SOURCES = [
+    'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js',
+    'vendor/chart.umd.js',
+  ];
+  const DEFAULT_BASE = '2022Q2'; // 買房那一季
+  const DEFAULT_ON = { m2: ['home', 'nvm_city_m2'], cbs: ['cbs_amsterdam', 'cbs_nl'] };
+  const VIEW_TEXT = { m2: '阿姆斯特丹各區公寓每 m² 價格', cbs: '荷蘭各地房價指數' };
+  const FORECAST_NOTE =
+    ' 虛線和淡色區塊是到 2028 年底的預估範圍。全荷蘭用銀行預測（ABN AMRO、Rabobank、ING、荷蘭央行，2026 年 6 月到 10 月發布）。' +
+    '沒有銀行針對阿姆斯特丹做預測，阿姆斯特丹和我家的範圍是依這些報告做的判斷，不是保證。';
+
+  const $ = id => document.getElementById(id);
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  let DATA = null;
+  let Q = [];
+  let LI = 0;
+  let chart = null;
+  let chartLib = null; // Chart.js 載入成功後才有值
+  const state = { view: 'm2', mode: 'pct', base: DEFAULT_BASE, smooth: false, hidden: {} };
+
+  // ---------- 狀態訊息 ----------
+
+  /** 整頁無法使用時：隱藏控制項，只留錯誤訊息 */
+  function showFatal(message) {
+    document.body.classList.add('is-fatal');
+    const el = $('fatal');
+    el.hidden = false;
+    el.querySelector('[data-msg]').textContent = message;
+  }
+
+  /** 圖表區的覆蓋訊息：loading、error、empty，或傳 null 清掉 */
+  function setChartStatus(kind, message) {
+    const box = $('chart-status');
+    const retry = $('chart-retry');
+    if (!kind) { box.hidden = true; box.dataset.kind = ''; return; }
+    box.hidden = false;
+    box.dataset.kind = kind;
+    box.querySelector('[data-msg]').textContent = message;
+    retry.hidden = kind !== 'error';
+  }
+
+  // ---------- 各區塊渲染 ----------
+
+  function renderBaseSelect(bases) {
+    const sel = $('base');
+    sel.textContent = '';
+    for (const q of bases) {
+      const opt = document.createElement('option');
+      opt.value = q;
+      opt.textContent = T.qLabel(q) + (q === DEFAULT_BASE ? '（我買房那季）' : '');
+      opt.selected = q === state.base;
+      sel.appendChild(opt);
+    }
+    sel.disabled = bases.length === 0;
+  }
+
+  function renderLegend(series) {
+    const box = $('legend');
+    // 重畫前記住鍵盤焦點在哪一顆，重畫後放回去，否則按 Enter 之後焦點會掉到 body
+    const focusedId = box.contains(document.activeElement) ? document.activeElement.dataset.id : null;
+    box.textContent = '';
+    for (const s of series) {
+      const on = !state.hidden[s.id];
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.id = s.id;
+      btn.className = on ? '' : 'off';
+      btn.setAttribute('aria-pressed', String(on));
+      const sw = document.createElement('span');
+      sw.className = 'sw';
+      sw.setAttribute('aria-hidden', 'true');
+      sw.style.background = s.home ? css('--home') : s.color;
+      btn.append(sw, document.createTextNode(s.label));
+      box.appendChild(btn);
+    }
+    if (focusedId) {
+      const again = box.querySelector('button[data-id="' + CSS.escape(focusedId) + '"]');
+      if (again) again.focus();
+    }
+  }
+
+  function renderTable(prepared, unit) {
+    $('th-base').textContent = state.base ? T.qShort(state.base) : '基準季';
+    $('th-last').textContent = T.qShort(Q[LI]);
+    const rows = T.tableRows(prepared, Q, LI, state.hidden);
+    const tb = $('tb');
+    tb.textContent = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      if (r.s.home) tr.className = 'home';
+      const cells = [r.s.label, T.fmtRaw(r.base, unit), T.fmtRaw(r.latest, unit), T.fmtPct(r.chg)];
+      cells.forEach((text, i) => {
+        const td = document.createElement(i === 0 ? 'th' : 'td');
+        if (i === 0) td.scope = 'row';
+        td.textContent = text;
+        if (i === 3) td.className = r.chg >= 0 ? 'up' : 'down';
+        // 這條線最新實際季沒有點（例如「我家」），標出實際用的是哪一季
+        if (i === 2 && r.stale) {
+          const asof = document.createElement('small');
+          asof.className = 'asof';
+          asof.textContent = T.qShort(r.latestQuarter);
+          td.append(' ', asof);
+        }
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    }
+    $('table-empty').hidden = rows.length > 0;
+  }
+
+  function renderText(viewSeries) {
+    const home = viewSeries.find(s => s.id === 'home');
+    const outlook = state.view === 'm2' ? T.homeOutlook(home, LI, DATA.homeEnd, DATA.homeArea) : null;
+    $('key').textContent = T.keyMessage(state.view, outlook);
+    const updated = '實際數字更新到 ' + T.qLabel(Q[LI]) + '。';
+    $('note').textContent =
+      (state.view === 'm2'
+        ? '資料：NVM 與 MVA 季報，公寓成交中位價每平方公尺，只算中古屋。小區每季成交件數少，單季會跳，看趨勢比較準。「我家」只有兩個點：買入價與 2026 年銀行估價，換算成每平方公尺。' + updated
+        : '資料：荷蘭統計局 CBS 既有住宅價格指數（2020 年 = 100），所有房型。區域是 CBS 的統計區，不是單一城市。' + updated) + FORECAST_NOTE;
+  }
+
+  /** 給螢幕閱讀器的圖表摘要，跟著目前顯示的線更新 */
+  function chartAriaLabel(prepared) {
+    const on = prepared.filter(s => !state.hidden[s.id]).map(s => s.label);
+    return '線圖：' + VIEW_TEXT[state.view] + '逐季' + (state.mode === 'pct' ? '漲幅' : '數字') +
+      '，含到 2028 年底的預估。目前顯示：' + (on.length ? on.join('、') : '無') + '。各線數字見下方表格。';
+  }
+
+  // ---------- Chart.js 設定 ----------
+
+  /** 每個年份標籤大約需要 36px，不夠就每 2 年（或更多）標一次 */
+  function yearStep(width, labels) {
+    const years = labels.filter(q => q.endsWith('Q1')).length || 1;
+    return Math.max(1, Math.ceil((36 * years) / Math.max(width, 1)));
+  }
+
+  function buildChartConfig(prepared, firstIdx, unit) {
+    const labels = Q.slice(firstIdx);
+    const lastLabelIdx = labels.indexOf(Q[LI]);
+    const muted = css('--muted');
+    const line = css('--line');
+    const homeColor = css('--home');
+    const pctMode = state.mode === 'pct';
+
+    const datasets = prepared.map(s => {
+      const color = s.home ? homeColor : s.color;
+      return {
+        label: s.label, data: (pctMode ? s.pct : s.vals).slice(firstIdx),
+        _raw: s.vals.slice(firstIdx), _pct: s.pct.slice(firstIdx),
+        borderColor: color, backgroundColor: color, borderWidth: s.home ? 3 : 2, borderDash: s.home ? [6, 4] : [],
+        pointRadius: s.home ? 5 : 2.5, pointHoverRadius: s.home ? 7 : 5, pointStyle: s.home ? 'rectRot' : 'circle',
+        spanGaps: !!s.home, tension: 0, hidden: !!state.hidden[s.id], _id: s.id,
+      };
+    });
+
+    // 預估：低、高兩條細線中間填色，再加一條中位虛線
+    for (const s of prepared) {
+      if (!s.fc || state.hidden[s.id]) continue;
+      const color = s.home ? homeColor : s.color;
+      const pick = k => (pctMode ? s.fcp[k] : s.fc[k]).slice(firstIdx);
+      const common = { borderColor: color, backgroundColor: color + '22', pointRadius: 0, pointHoverRadius: 0, tension: 0, _fc: true, _id: s.id };
+      datasets.push(Object.assign({}, common, { label: s.label + ' 預估低', data: pick('lo'), borderWidth: 1, borderDash: [2, 3], fill: false, _band: 'lo' }));
+      datasets.push(Object.assign({}, common, { label: s.label + ' 預估高', data: pick('hi'), borderWidth: 1, borderDash: [2, 3], fill: '-1', _band: 'hi' }));
+      datasets.push(Object.assign({}, common, {
+        label: s.label + ' 預估', data: pick('mid'), borderWidth: 2, borderDash: [5, 4], pointRadius: 2, pointHoverRadius: 5, _band: 'mid',
+        _raw: s.fc.mid.slice(firstIdx), _pct: s.fcp.mid.slice(firstIdx),
+        _lo: s.fc.lo.slice(firstIdx), _hi: s.fc.hi.slice(firstIdx), _plo: s.fcp.lo.slice(firstIdx), _phi: s.fcp.hi.slice(firstIdx),
+      }));
+    }
+
+    // 「← 實際 | 預估 →」分隔線
+    const nowLine = {
+      id: 'nowLine',
+      afterDraw(c) {
+        if (lastLabelIdx < 0) return;
+        const x = c.scales.x.getPixelForValue(lastLabelIdx);
+        const a = c.chartArea;
+        const g = c.ctx;
+        g.save();
+        g.strokeStyle = muted; g.setLineDash([3, 3]);
+        g.beginPath(); g.moveTo(x, a.top); g.lineTo(x, a.bottom); g.stroke();
+        g.setLineDash([]); g.fillStyle = muted; g.font = '12px -apple-system,sans-serif';
+        g.textAlign = 'left'; g.fillText('預估 →', x + 6, a.top + 12);
+        g.textAlign = 'right'; g.fillText('← 實際', x - 6, a.top + 12);
+        g.restore();
+      },
+    };
+
+    const tooltipLabel = c => {
+      const ds = c.dataset;
+      const i = c.dataIndex;
+      if (ds._fc) {
+        let t = ds.label + '：' + T.fmtRaw(ds._lo[i], unit) + ' 到 ' + T.fmtRaw(ds._hi[i], unit);
+        if (ds._plo[i] != null && ds._phi[i] != null) t += '（' + T.fmtPct(ds._plo[i]) + ' 到 ' + T.fmtPct(ds._phi[i]) + '）';
+        return t;
+      }
+      let t = ds.label + '：' + T.fmtRaw(ds._raw[i], unit);
+      if (ds._pct[i] != null) t += '，' + T.fmtPct(ds._pct[i]);
+      return t;
+    };
+
+    return {
+      type: 'line',
+      data: { labels, datasets },
+      plugins: [nowLine],
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            itemSort: (a, b) => (b.parsed.y ?? -1e9) - (a.parsed.y ?? -1e9),
+            // 實際線全部顯示；預估只顯示中位線，而且只在預估季
+            filter: i => i.parsed.y != null && (!i.dataset._fc || (i.dataset._band === 'mid' && i.dataIndex > lastLabelIdx)),
+            callbacks: {
+              title: items => (items.length ? T.qLabel(items[0].label) + (state.base ? '（對比 ' + T.qLabel(state.base) + '）' : '') : ''),
+              label: tooltipLabel,
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: muted, autoSkip: false, maxRotation: 0,
+              // 只在每年第 1 季標年份；寬度不夠時（手機看 2016 起的指數）隔年標一次，避免文字重疊
+              callback(v) {
+                const q = this.getLabelForValue(v);
+                if (!q.endsWith('Q1')) return '';
+                const step = yearStep(this.chart.width, labels);
+                return (Number(q.slice(0, 4)) - Number(labels[0].slice(0, 4))) % step === 0 ? q.slice(0, 4) : '';
+              },
+            },
+            grid: { display: false },
+          },
+          y: {
+            ticks: { color: muted, callback: v => (pctMode ? (v > 0 ? '+' : '') + v + '%' : unit === 'eur' ? '€' + v.toLocaleString('en-US') : v) },
+            grid: { color: ctx => (pctMode && ctx.tick.value === 0 ? muted : line) },
+          },
+        },
+      },
+    };
+  }
+
+  function renderChart(prepared, firstIdx, unit) {
+    const canvas = $('c');
+    canvas.setAttribute('aria-label', chartAriaLabel(prepared));
+    if (!chartLib) return; // 還在載入或載入失敗，狀態訊息已經顯示
+    if (chart) { chart.destroy(); chart = null; }
+    if (!prepared.length) { setChartStatus('empty', '這個資料組目前沒有可顯示的數字。'); return; }
+    if (prepared.every(s => state.hidden[s.id])) {
+      setChartStatus('empty', '目前沒有選任何一條線。點上方的地區按鈕加回來。');
+    } else {
+      setChartStatus(null);
+    }
+    try {
+      chart = new chartLib(canvas, buildChartConfig(prepared, firstIdx, unit));
+    } catch (e) {
+      console.error('[圖表]', e);
+      setChartStatus('error', '圖表畫不出來。下方表格的數字仍可使用。');
+    }
+  }
+
+  // ---------- 主流程 ----------
+
+  /** 依目前 state 重畫全部 */
+  function render() {
+    const view = DATA.views[state.view];
+    const bases = T.availableBases(view.series, Q, LI, state.smooth);
+    state.base = T.resolveBase(state.base, bases, DEFAULT_BASE);
+    renderBaseSelect(bases);
+
+    const prepared = T.prepareSeries(view.series, Q, state.base, state.smooth);
+    const firstIdx = T.chartStartIndex(view.series);
+    renderLegend(view.series);
+    renderTable(prepared, view.unit);
+    renderText(view.series);
+    renderChart(prepared, firstIdx, view.unit);
+  }
+
+  /** 兩顆一組的切換按鈕（aria-pressed） */
+  function bindSegment(idA, idB, key, valA, valB) {
+    const a = $(idA);
+    const b = $(idB);
+    const set = v => {
+      state[key] = v;
+      a.setAttribute('aria-pressed', String(v === valA));
+      b.setAttribute('aria-pressed', String(v === valB));
+      render();
+    };
+    a.addEventListener('click', () => set(valA));
+    b.addEventListener('click', () => set(valB));
+  }
+
+  function bindControls() {
+    $('legend').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-id]');
+      if (!btn) return;
+      state.hidden[btn.dataset.id] = !state.hidden[btn.dataset.id];
+      render();
+    });
+    bindSegment('v-m2', 'v-cbs', 'view', 'm2', 'cbs');
+    bindSegment('m-pct', 'm-raw', 'mode', 'pct', 'raw');
+    $('base').addEventListener('change', e => { state.base = e.target.value; render(); });
+    $('smooth').addEventListener('change', e => { state.smooth = e.target.checked; render(); });
+    $('chart-retry').addEventListener('click', loadChart);
+    // 系統切換深淺色時，圖表顏色要跟著換
+    const mq = matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', render);
+  }
+
+  function loadChart() {
+    setChartStatus('loading', '圖表載入中…');
+    D.loadChartLib(CHART_SOURCES)
+      .then(lib => { chartLib = lib; render(); })
+      .catch(err => {
+        console.error('[圖表元件]', err);
+        setChartStatus('error', '圖表元件載入失敗，可能是網路不穩或被擋廣告外掛擋下。下方表格的數字仍可使用。');
+      });
+  }
+
+  function init() {
+    const result = D.validateData(D.readEmbeddedData('housing-data'));
+    result.warnings.forEach(w => console.warn('[資料]', w));
+    if (result.error) {
+      showFatal('資料讀取失敗（' + result.error + '）。請重新產生 index.html 或稍後再試。');
+      return;
+    }
+    DATA = result.data;
+    Q = DATA.quarters;
+    LI = Q.indexOf(DATA.lastActual);
+    for (const vid in DATA.views) {
+      for (const s of DATA.views[vid].series) if (!(DEFAULT_ON[vid] || []).includes(s.id)) state.hidden[s.id] = true;
+    }
+    bindControls();
+    // 表格與文字不需要 Chart.js，先畫出來；圖表等元件載入完再補上
+    render();
+    loadChart();
+  }
+
+  init();
+})();
 </script>
 </body>
 </html>
