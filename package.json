@@ -1,0 +1,11 @@
+{
+  "name": "amsterdam-housing-chart",
+  "private": true,
+  "scripts": {
+    "test": "python3 -m unittest discover tests && node tests/page.test.js"
+  },
+  "devDependencies": {
+    "chart.js": "4.4.1",
+    "playwright": "1.48.2"
+  }
+}
